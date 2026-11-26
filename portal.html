@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Prodygy Portal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia,serif' font-size='38' fill='%23fff'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#000;--panel:#0b0b0b;--ink:#f2f2f0;--soft:#bdbdba;--mute:#7c7c79;--line:#1f1f1f;--bad:#e0675e}
+*{box-sizing:border-box;min-width:0}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:15px/1.55 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:880px;margin:0 auto;padding:0 max(20px,3vw)}
+header{display:flex;justify-content:space-between;align-items:center;height:72px;border-bottom:1px solid var(--line)}
+.mark{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:18px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+.mark span{font-family:"Instrument Sans",sans-serif;font-weight:400;font-size:13px;letter-spacing:0;text-transform:none;color:var(--mute);margin-left:10px}
+.who{display:flex;gap:16px;align-items:center;font-size:13px;color:var(--mute)}
+.link{background:none;border:0;padding:8px 0;color:var(--soft);border-bottom:1px solid #333}
+.link:hover{color:var(--ink);border-color:var(--ink)}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:0}
+h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:28px;line-height:1.15;margin:0}
+.sub{color:var(--soft);margin-top:10px;max-width:36em}
+.card{max-width:420px;margin:14vh auto 0}
+label{display:grid;gap:4px;font-size:13px;color:var(--mute)}
+input[type=text],input[type=email],input[type=url],textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid #2c2c2c;border-radius:0;padding:9px 0;min-height:44px;width:100%}
+textarea{min-height:90px;resize:vertical}
+input[type=datetime-local],select{font:inherit;font-size:15px;color:var(--ink);background:#111;border:1px solid #2c2c2c;border-radius:10px;min-height:42px;padding:0 10px;color-scheme:dark}
+input:focus,textarea:focus{outline:none;border-color:var(--ink)}
+:focus-visible{outline:1px solid var(--soft);outline-offset:3px}
+.btn{background:var(--ink);color:#000;border:0;border-radius:999px;min-height:42px;padding:0 20px;font-weight:500}
+.btn:hover{background:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid #333}
+.msg{margin-top:12px;color:var(--soft);min-height:1.5em;font-size:14px}
+.msg.err{color:var(--bad)}
+.hello{padding:48px 0 8px}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:32px 0}
+.box{background:var(--bg);padding:26px}
+.box.full{grid-column:1/-1}
+.box h3{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 14px}
+.big{font-family:"Cormorant Garamond",Georgia,serif;font-size:26px;line-height:1.2}
+.muted{color:var(--mute)}
+.list{list-style:none;margin:0;padding:0}
+.list li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.list li:last-child{border-bottom:0}
+.when{color:var(--mute);font-size:13px;white-space:nowrap}
+.body{white-space:pre-wrap;overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:12px;color:var(--soft);border:1px solid #333;border-radius:999px;padding:1px 9px;margin-left:8px;vertical-align:middle}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.row>*{flex:1 1 170px}
+.row .btn{flex:0 0 auto}
+.check{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--soft)}
+.check input{width:18px;height:18px;accent-color:#fff}
+.founder{border:1px solid var(--line);border-radius:16px;margin:24px 0;overflow:hidden}
+.founder>summary{list-style:none;cursor:pointer;padding:22px 26px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.founder>summary::-webkit-details-marker{display:none}
+.founder>summary .big{font-size:24px}
+.founder[open]>summary{border-bottom:1px solid var(--line)}
+.founder .inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
+.founder .inner .box.full{grid-column:1/-1}
+.mini{background:none;border:0;color:var(--mute);font-size:13px;padding:0}
+.mini:hover{color:var(--bad)}
+.edit{background:none;border:0;color:var(--soft);font-size:13px;padding:0;border-bottom:1px solid #333}
+@media(max-width:640px){.grid,.founder .inner{grid-template-columns:minmax(0,1fr)}.box.full{grid-column:auto}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="mark" href="/">Prodygy<span id="roleLabel">Portal</span></a>
+    <div class="who" id="who" hidden><span id="whoEmail"></span><button class="link" id="out">Sign out</button></div>
+  </header>
+
+  <section id="login" class="card" hidden>
+    <h1>Sign in</h1>
+    <p class="sub">For Prodygy founders and mentors. Enter the email you applied with and we'll send you a one-time sign-in link.</p>
+    <form id="loginForm" style="display:grid;gap:22px;margin-top:28px" novalidate>
+      <label>Email<input type="email" id="email" autocomplete="email" required></label>
+      <div><button class="btn" type="submit" id="sendBtn">Email me a link</button></div>
+    </form>
+    <p class="msg" id="loginMsg" role="status"></p>
+  </section>
+
+  <section id="denied" class="card" hidden>
+    <h1>Not in the program yet</h1>
+    <p class="sub">This email isn't linked to a Prodygy founder or mentor. If you were accepted with a different email, sign out and use that one. Questions? Email <a href="mailto:prodygy.studio@gmail.com">prodygy.studio@gmail.com</a>.</p>
+    <p style="margin-top:24px"><button class="link" id="out2">Sign out</button></p>
+  </section>
+
+  <section id="founderView" hidden></section>
+  <section id="mentorView" hidden></section>
+  <p class="msg" id="appMsg" role="status" style="margin-bottom:60px"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+{
+const sb=window.supabase.createClient('https://bipwnsjtbwbfvxtoltfx.supabase.co','sb_publishable_pn1Pt6vlZoR2ogsQyZ72gQ_EObjaY2u');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const linkify=u=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,'').replace(/\/$/,''))} ↗</a>`:'';
+const fmt=d=>new Date(d).toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+const day=d=>new Date(d).toLocaleDateString([], {month:'short',day:'numeric',year:'numeric'});
+const views=['login','denied','founderView','mentorView'];
+const show=id=>views.forEach(v=>$(v).hidden=v!==id);
+const flash=(t,err)=>{$('appMsg').className='msg'+(err?' err':'');$('appMsg').textContent=t;if(!err)setTimeout(()=>{if($('appMsg').textContent===t)$('appMsg').textContent=''},3000)};
+let me=null;
+
+/* sign in */
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();
+  const email=$('email').value.trim().toLowerCase();
+  if(!/^\S+@\S+\.\S+$/.test(email)){$('loginMsg').className='msg err';$('loginMsg').textContent='Enter a valid email.';return}
+  $('sendBtn').disabled=true;$('loginMsg').className='msg';$('loginMsg').textContent='Sending…';
+  const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/portal.html'}});
+  $('sendBtn').disabled=false;
+  if(error){$('loginMsg').className='msg err';$('loginMsg').textContent=/rate/i.test(error.message)?'Too many emails sent. Wait a few minutes and try again.':'Could not send the link. Try again, or email prodygy.studio@gmail.com.';return}
+  $('loginMsg').textContent='Check your inbox for a sign-in link. It opens this page signed in.'});
+const signOut=async()=>{await sb.auth.signOut();location.replace('/portal.html')};
+$('out').addEventListener('click',signOut);$('out2').addEventListener('click',signOut);
+
+const start=async session=>{
+  if(!session){$('who').hidden=true;$('roleLabel').textContent='Portal';show('login');return}
+  $('who').hidden=false;$('whoEmail').textContent=session.user.email;
+  const {data,error}=await sb.from('members').select('*').ilike('email',session.user.email).eq('active',true).limit(1);
+  if(error||!data||!data.length){show('denied');return}
+  me=data[0];
+  $('roleLabel').textContent=me.role==='founder'?'Founder portal':'Mentor portal';
+  if(me.role==='founder')loadFounder();else loadMentor();
+};
+let current;
+sb.auth.onAuthStateChange((_e,session)=>{const id=session?session.user.id:null;if(id===current&&id)return;current=id;setTimeout(()=>start(session),0)});
+
+/* ---------------- founder ---------------- */
+let F={};
+const loadFounder=async()=>{
+  const [a,s,u,n]=await Promise.all([
+    sb.from('assignments').select('mentor_id').eq('founder_id',me.id),
+    sb.from('sessions').select('*').eq('founder_id',me.id).order('starts_at',{ascending:true}),
+    sb.from('updates').select('*').eq('founder_id',me.id).order('created_at',{ascending:false}),
+    sb.from('mentor_notes').select('*').eq('founder_id',me.id).eq('shared',true).order('created_at',{ascending:false})]);
+  if([a,s,u,n].some(r=>r.error)){flash('Could not load your portal. Refresh to try again.',1);return}
+  const ids=a.data.map(x=>x.mentor_id);
+  const m=ids.length?await sb.from('members').select('id,name,email,headline').in('id',ids):{data:[]};
+  F={mentors:m.data||[],sessions:s.data,updates:u.data,notes:n.data};drawFounder();show('founderView');
+};
+const drawFounder=()=>{
+  const now=Date.now(),up=F.sessions.filter(x=>new Date(x.starts_at)>=now-36e5),mn=id=>(F.mentors.find(m=>m.id===id)||{}).name;
+  $('founderView').innerHTML=`
+  <div class="hello"><p class="kicker">Founding cohort</p><h1>Welcome, ${esc(me.name.split(' ')[0])}.</h1><p class="sub">Your company, your mentor and your sessions, all in one place. Post an update every week so your mentor knows where you are.</p></div>
+  <div class="grid">
+    <div class="box full" id="coBox">
+      <h3>Your company</h3>
+      <div id="coRead">
+        <div class="big">${esc(me.company||'Name your company')}</div>
+        <p class="body muted" style="margin:8px 0 0">${esc(me.company_description||'Add a one-line description of what you are building.')}</p>
+        ${me.company_url?`<p style="margin:10px 0 0">${linkify(me.company_url)}</p>`:''}
+        <p style="margin:16px 0 0"><button class="edit" id="coEdit">Edit company</button></p>
+      </div>
+      <form id="coForm" hidden style="display:grid;gap:16px" novalidate>
+        <div class="row"><label>Company name<input type="text" id="coName" value="${esc(me.company)}"></label><label>Website<input type="url" id="coUrl" placeholder="https://" value="${esc(me.company_url||'')}"></label></div>
+        <label>What it does<textarea id="coDesc">${esc(me.company_description)}</textarea></label>
+        <div class="row"><div></div><button type="button" class="btn ghost" id="coCancel">Cancel</button><button type="submit" class="btn">Save</button></div>
+      </form>
+    </div>
+    <div class="box">
+      <h3>Your mentor${F.mentors.length>1?'s':''}</h3>
+      ${F.mentors.length?F.mentors.map(m=>`<div style="margin-bottom:14px"><div class="big">${esc(m.name)}</div>${m.headline?`<div class="muted">${esc(m.headline)}</div>`:''}<a href="mailto:${esc(m.email)}" style="font-size:14px">${esc(m.email)}</a></div>`).join(''):'<p class="muted">We are matching you with a mentor. You will see them here soon.</p>'}
+    </div>
+    <div class="box">
+      <h3>Upcoming sessions</h3>
+      ${up.length?`<ul class="list">${up.map(x=>`<li><div><div>${esc(x.title)}${x.mentor_id&&mn(x.mentor_id)?` with ${esc(mn(x.mentor_id))}`:''}</div><div class="when">${esc(fmt(x.starts_at))}</div>${x.details?`<div class="muted body" style="font-size:14px">${esc(x.details)}</div>`:''}</div>${x.link?`<a class="btn ghost" style="display:inline-flex;align-items:center;text-decoration:none;min-height:36px" href="${esc(x.link)}" target="_blank" rel="noopener">Join</a>`:''}</li>`).join('')}</ul>`:'<p class="muted">Nothing scheduled yet.</p>'}
+    </div>
+    <div class="box full">
+      <h3>Weekly update</h3>
+      <form id="upForm" novalidate style="display:grid;gap:14px">
+        <label>What did you ship, learn or get stuck on this week?<textarea id="upBody" placeholder="Shipped… Learned… Stuck on… Next week…"></textarea></label>
+        <div><button class="btn" type="submit" id="upBtn">Post update</button></div>
+      </form>
+      ${F.updates.length?`<ul class="list" style="margin-top:18px">${F.updates.map(x=>`<li><div class="body">${esc(x.body)}</div><div style="text-align:right"><div class="when">${esc(day(x.created_at))}</div><button class="mini" data-delup="${esc(x.id)}">Delete</button></div></li>`).join('')}</ul>`:''}
+    </div>
+    ${F.notes.length?`<div class="box full"><h3>Notes from your mentor</h3><ul class="list">${F.notes.map(x=>`<li><div class="body">${esc(x.body)}</div><div class="when">${esc(mn(x.mentor_id)||'')} · ${esc(day(x.created_at))}</div></li>`).join('')}</ul></div>`:''}
+  </div>`;
+};
+$('founderView').addEventListener('click',async e=>{
+  if(e.target.id==='coEdit'){$('coRead').hidden=true;$('coForm').hidden=false;$('coName').focus()}
+  if(e.target.id==='coCancel'){$('coRead').hidden=false;$('coForm').hidden=true}
+  const d=e.target.closest('[data-delup]');
+  if(d){if(!confirm('Delete this update?'))return;const {error}=await sb.from('updates').delete().eq('id',d.dataset.delup);if(error)return flash('Could not delete.',1);F.updates=F.updates.filter(x=>x.id!==d.dataset.delup);drawFounder();flash('Update deleted.')}
+});
+$('founderView').addEventListener('submit',async e=>{e.preventDefault();
+  if(e.target.id==='coForm'){
+    let url=$('coUrl').value.trim();if(url&&!/^https?:\/\//i.test(url))url='https://'+url;
+    const patch={company:$('coName').value.trim(),company_description:$('coDesc').value.trim(),company_url:url||null};
+    const {error}=await sb.from('members').update(patch).eq('id',me.id);
+    if(error)return flash('Could not save. Try again.',1);
+    Object.assign(me,patch);drawFounder();flash('Company saved.');
+  }
+  if(e.target.id==='upForm'){
+    const body=$('upBody').value.trim();if(!body)return $('upBody').focus();
+    $('upBtn').disabled=true;
+    const {data,error}=await sb.from('updates').insert({founder_id:me.id,body}).select('*').single();
+    $('upBtn').disabled=false;
+    if(error)return flash('Could not post. Try again.',1);
+    F.updates.unshift(data);drawFounder();flash('Update posted. Your mentor can see it now.');
+  }
+});
+
+/* ---------------- mentor ---------------- */
+let M={};
+const loadMentor=async()=>{
+  const a=await sb.from('assignments').select('founder_id').eq('mentor_id',me.id);
+  if(a.error){flash('Could not load your portal. Refresh to try again.',1);return}
+  const ids=a.data.map(x=>x.founder_id);
+  if(!ids.length){M={founders:[],sessions:[],updates:[],notes:[]};drawMentor();show('mentorView');return}
+  const [f,s,u,n]=await Promise.all([
+    sb.from('members').select('*').in('id',ids),
+    sb.from('sessions').select('*').in('founder_id',ids).order('starts_at',{ascending:true}),
+    sb.from('updates').select('*').in('founder_id',ids).order('created_at',{ascending:false}),
+    sb.from('mentor_notes').select('*').eq('mentor_id',me.id).order('created_at',{ascending:false})]);
+  if([f,s,u,n].some(r=>r.error)){flash('Could not load your portal. Refresh to try again.',1);return}
+  M={founders:f.data,sessions:s.data,updates:u.data,notes:n.data};drawMentor();show('mentorView');
+};
+const drawMentor=()=>{
+  const now=Date.now();
+  $('mentorView').innerHTML=`
+  <div class="hello"><p class="kicker">Board of mentors</p><h1>Welcome, ${esc(me.name.split(' ')[0])}.</h1><p class="sub">${M.founders.length?`You're mentoring ${M.founders.length} founder${M.founders.length>1?'s':''}. Read their weekly updates, schedule sessions and keep notes. Notes stay private unless you share them with the founder.`:'You haven\'t been matched with a founder yet. They will appear here as soon as you are.'}</p></div>
+  ${M.founders.map((f,i)=>{
+    const ss=M.sessions.filter(x=>x.founder_id===f.id&&new Date(x.starts_at)>=now-36e5),uu=M.updates.filter(x=>x.founder_id===f.id),nn=M.notes.filter(x=>x.founder_id===f.id);
+    return `<details class="founder" ${i===0?'open':''} data-f="${esc(f.id)}">
+      <summary><div><div class="big">${esc(f.name)}</div><div class="muted" style="font-size:14px">${esc([f.company,f.headline].filter(Boolean).join(' · '))}</div></div><span class="when">${uu[0]?'Last update '+esc(day(uu[0].created_at)):'No updates yet'}</span></summary>
+      <div class="inner">
+        <div class="box"><h3>Company</h3><div class="big">${esc(f.company||'Unnamed yet')}</div><p class="body muted" style="margin:8px 0 0">${esc(f.company_description||'')}</p>${f.company_url?`<p style="margin:10px 0 0">${linkify(f.company_url)}</p>`:''}<p style="margin:14px 0 0;font-size:14px"><a href="mailto:${esc(f.email)}">${esc(f.email)}</a></p></div>
+        <div class="box"><h3>Sessions</h3>
+          ${ss.length?`<ul class="list">${ss.map(x=>`<li><div><div>${esc(x.title)}</div><div class="when">${esc(fmt(x.starts_at))}</div></div><div style="text-align:right">${x.link?`<a href="${esc(x.link)}" target="_blank" rel="noopener" style="font-size:14px">Join ↗</a><br>`:''}<button class="mini" data-delsess="${esc(x.id)}">Cancel</button></div></li>`).join('')}</ul>`:'<p class="muted">Nothing scheduled.</p>'}
+          <form class="sessForm" novalidate style="display:grid;gap:10px;margin-top:14px">
+            <div class="row"><label>When<input type="datetime-local" name="when" required></label></div>
+            <div class="row"><label>Video link (optional)<input type="url" name="link" placeholder="https://"></label><button class="btn ghost" type="submit">Schedule</button></div>
+          </form>
+        </div>
+        <div class="box full"><h3>Weekly updates</h3>${uu.length?`<ul class="list">${uu.map(x=>`<li><div class="body">${esc(x.body)}</div><div class="when">${esc(day(x.created_at))}</div></li>`).join('')}</ul>`:'<p class="muted">No updates yet.</p>'}</div>
+        <div class="box full"><h3>Your notes</h3>
+          <form class="noteForm" novalidate style="display:grid;gap:12px">
+            <label>Note<textarea name="body" placeholder="What you discussed, advice, next steps…"></textarea></label>
+            <div class="row" style="align-items:center"><label class="check" style="flex:1 1 auto"><input type="checkbox" name="shared"> Share this note with ${esc(f.name.split(' ')[0])}</label><button class="btn" type="submit">Save note</button></div>
+          </form>
+          ${nn.length?`<ul class="list" style="margin-top:14px">${nn.map(x=>`<li><div class="body">${esc(x.body)}</div><div style="text-align:right"><div class="when">${esc(day(x.created_at))} · ${x.shared?'Shared':'Private'}</div><button class="mini" data-delnote="${esc(x.id)}">Delete</button></div></li>`).join('')}</ul>`:''}
+        </div>
+      </div>
+    </details>`}).join('')}`;
+};
+$('mentorView').addEventListener('submit',async e=>{e.preventDefault();
+  const fid=e.target.closest('[data-f]')?.dataset.f;if(!fid)return;
+  const fd=new FormData(e.target),btn=e.target.querySelector('[type=submit]');
+  if(e.target.classList.contains('sessForm')){
+    const w=fd.get('when');if(!w)return flash('Pick a date and time.',1);
+    let link=String(fd.get('link')||'').trim();if(link&&!/^https?:\/\//i.test(link))link='https://'+link;
+    btn.disabled=true;
+    const {data,error}=await sb.from('sessions').insert({founder_id:fid,mentor_id:me.id,starts_at:new Date(w).toISOString(),title:'Mentor session with '+me.name,link:link||null}).select('*').single();
+    btn.disabled=false;
+    if(error)return flash('Could not schedule. Try again.',1);
+    M.sessions.push(data);M.sessions.sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));drawMentor();keepOpen(fid);flash('Session scheduled. The founder sees it in their portal.');
+  }
+  if(e.target.classList.contains('noteForm')){
+    const body=String(fd.get('body')||'').trim();if(!body)return;
+    btn.disabled=true;
+    const {data,error}=await sb.from('mentor_notes').insert({mentor_id:me.id,founder_id:fid,body,shared:fd.get('shared')==='on'}).select('*').single();
+    btn.disabled=false;
+    if(error)return flash('Could not save the note.',1);
+    M.notes.unshift(data);drawMentor();keepOpen(fid);flash(data.shared?'Note saved and shared.':'Note saved. Only you and Prodygy can see it.');
+  }
+});
+$('mentorView').addEventListener('click',async e=>{
+  const fid=e.target.closest('[data-f]')?.dataset.f;
+  const s=e.target.closest('[data-delsess]'),n=e.target.closest('[data-delnote]');
+  if(s){if(!confirm('Cancel this session?'))return;const {error}=await sb.from('sessions').delete().eq('id',s.dataset.delsess);if(error)return flash('Could not cancel.',1);M.sessions=M.sessions.filter(x=>x.id!==s.dataset.delsess);drawMentor();keepOpen(fid)}
+  if(n){if(!confirm('Delete this note?'))return;const {error}=await sb.from('mentor_notes').delete().eq('id',n.dataset.delnote);if(error)return flash('Could not delete.',1);M.notes=M.notes.filter(x=>x.id!==n.dataset.delnote);drawMentor();keepOpen(fid)}
+});
+const keepOpen=fid=>document.querySelectorAll('#mentorView details').forEach(d=>d.open=d.dataset.f===fid);
+}
+</script>
+</body>
+</html>
