@@ -338,7 +338,9 @@ let mode='F';
 const setMode=m=>{mode=m;$('tF').setAttribute('aria-selected',m==='F');$('tM').setAttribute('aria-selected',m==='M');$('fF').hidden=m!=='F';$('fM').hidden=m!=='M';$('done').classList.remove('show')};
 $('tF').addEventListener('click',()=>setMode('F'));
 $('tM').addEventListener('click',()=>setMode('M'));
-const ENDPOINT='https://formsubmit.co/ajax/notrainaarora@gmail.com';
+const ENDPOINT='https://formsubmit.co/ajax/prodygy.studio@gmail.com';
+/* every application is saved to the Prodygy database and also emailed to the inbox */
+const saveApp=row=>fetch(DB+'/applications',{method:'POST',headers:{apikey:DBK,Authorization:'Bearer '+DBK,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)}).then(r=>r.ok);
 const val=id=>$(id)?$(id).value.trim():'';
 const hook=(f,nameId,msg)=>f.addEventListener('submit',async e=>{e.preventDefault();
   const bad=[...f.querySelectorAll('[required]')].find(x=>!x.value.trim()||(x.type==='email'&&!/^\S+@\S+\.\S+$/.test(x.value)));
@@ -349,8 +351,10 @@ const hook=(f,nameId,msg)=>f.addEventListener('submit',async e=>{e.preventDefaul
     :{_subject:'New Prodygy mentor application: '+val('mN'),Type:'Mentor',Name:val('mN'),Email:val('mE'),Role:val('mR'),LinkedIn:val('mL'),Help:val('mH')};
   data._template='table';data._replyto=founder?val('fE'):val('mE');
   btn.disabled=true;btn.textContent='Sending…';
-  try{const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)});
-    if(!r.ok)throw 0;
+  const row=founder?{kind:'founder',name:val('fN'),email:val('fE').toLowerCase(),school:val('fS'),grade:val('fG'),building:val('fI'),link:val('fL')||null}
+    :{kind:'mentor',name:val('mN'),email:val('mE').toLowerCase(),role:val('mR'),linkedin:val('mL')||null,help:val('mH')};
+  try{const [saved,mailed]=await Promise.all([saveApp(row).catch(()=>false),fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)}).then(r=>r.ok).catch(()=>false)]);
+    if(!saved&&!mailed)throw 0;
     $('doneT').textContent=`Thank you, ${$(nameId).value.trim().split(' ')[0]}.`;$('doneP').textContent=msg;
     f.hidden=true;f.reset();$('done').classList.add('show')}
   catch(_){btn.textContent='Something went wrong. Try again';setTimeout(()=>btn.textContent=label,4000)}
