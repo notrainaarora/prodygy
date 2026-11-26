@@ -66,6 +66,32 @@ dialog form{display:grid;gap:18px}
 .foot{display:flex;justify-content:space-between;gap:10px;margin-top:6px;flex-wrap:wrap}
 .foot div{display:flex;gap:10px}
 @media(max-width:600px){.two{grid-template-columns:minmax(0,1fr)}.rows li{grid-template-columns:minmax(0,1fr);gap:10px}.move{display:flex;order:3}.act{justify-content:flex-start;order:2}}
+select{font:inherit;font-size:15px;color:var(--ink);background:#111;border:1px solid #2c2c2c;border-radius:10px;min-height:40px;padding:0 10px}
+input[type=datetime-local]{font:inherit;font-size:15px;color:var(--ink);background:#111;border:1px solid #2c2c2c;border-radius:10px;min-height:40px;padding:0 10px;color-scheme:dark}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{background:none;border:1px solid #2a2a2a;color:var(--mute);border-radius:999px;min-height:32px;padding:0 12px;font-size:13px}
+.chips button[aria-pressed=true]{color:#000;background:var(--ink);border-color:var(--ink)}
+.st{font-size:12px;border-radius:999px;padding:1px 9px;margin-left:8px;vertical-align:middle;border:1px solid #333;color:var(--soft)}
+.st.new{color:#000;background:var(--ink);border-color:var(--ink)}
+.st.accepted{border-color:#5d5d5a;color:var(--ink)}
+.st.rejected{opacity:.5}
+dl.ans{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 16px;margin:0 0 20px;font-size:14px}
+dl.ans dt{color:var(--mute)}
+dl.ans dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sec{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.sec h3{font-size:13px;font-weight:500;color:var(--mute);text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px}
+.mini{list-style:none;margin:0;padding:0;font-size:14px}
+.mini li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.mini li:last-child{border-bottom:0}
+.mini .when{color:var(--mute);font-size:12px;white-space:nowrap}
+.mini .body{white-space:pre-wrap;overflow-wrap:anywhere}
+.mini button{background:none;border:0;color:var(--mute);padding:0 4px;font-size:13px}
+.mini button:hover{color:var(--bad)}
+.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.inline>*{flex:1 1 160px}
+.inline .btn{flex:0 0 auto}
+dialog.wide{width:min(720px,calc(100vw - 32px));max-height:calc(100vh - 40px)}
+.groupt{font-family:"Cormorant Garamond",Georgia,serif;font-size:24px;margin:34px 0 8px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -94,14 +120,18 @@ dialog form{display:grid;gap:18px}
 
   <section id="app" hidden>
     <div class="tabs" role="tablist">
-      <button role="tab" data-tab="companies" aria-selected="true">Companies</button>
+      <button role="tab" data-tab="applications" aria-selected="true">Applications</button>
+      <button role="tab" data-tab="program" aria-selected="false">Founders &amp; mentors</button>
+      <button role="tab" data-tab="companies" aria-selected="false">Companies</button>
       <button role="tab" data-tab="cohort" aria-selected="false">Founding cohort</button>
       <button role="tab" data-tab="board" aria-selected="false">Board of mentors</button>
     </div>
     <div class="bar"><p id="tabHelp"></p><button class="btn" id="addBtn">Add</button></div>
+    <div class="bar" id="appFilters" hidden><div class="chips" id="stChips"></div><div class="chips" id="kindChips"></div></div>
     <ul class="rows" id="rows"></ul>
+    <div id="program" hidden></div>
     <p class="msg" id="appMsg" role="status"></p>
-    <p class="hint" style="margin:40px 0 60px">Changes appear on <a href="/" target="_blank" rel="noopener">prodygy.vercel.app</a> as soon as you save. Hidden items stay here but don't show on the site.</p>
+    <p class="hint" id="footHint" style="margin:40px 0 60px"></p>
   </section>
 </div>
 
@@ -126,6 +156,38 @@ dialog form{display:grid;gap:18px}
   </form>
 </dialog>
 
+
+<dialog id="appDlg" class="wide">
+  <h2 id="appTitle">Application</h2>
+  <dl class="ans" id="appAns"></dl>
+  <div class="two">
+    <label>Status<select id="appStatus"><option value="new">New</option><option value="reviewing">Reviewing</option><option value="interview">Interview</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option></select></label>
+    <div></div>
+  </div>
+  <label style="margin-top:18px">Private notes (only owners see these)<textarea id="appNotes" rows="4"></textarea></label>
+  <div class="foot" style="margin-top:20px">
+    <button type="button" class="btn danger" id="appDel">Delete</button>
+    <div><button type="button" class="btn ghost" id="appAccept">Accept</button><button type="button" class="btn ghost" id="appClose">Close</button><button type="button" class="btn" id="appSave">Save</button></div>
+  </div>
+  <p class="msg" id="appDlgMsg" role="status"></p>
+</dialog>
+
+<dialog id="memDlg" class="wide">
+  <h2 id="memTitle">Person</h2>
+  <form id="memForm" novalidate style="display:grid;gap:16px">
+    <div class="two"><label>Name<input type="text" id="mName" required></label><label>Email (used to sign in)<input type="email" id="mEmail" required></label></div>
+    <div class="two"><label>Role<select id="mRole"><option value="founder">Founder</option><option value="mentor">Mentor</option></select></label><label id="mHeadWrap">Headline<input type="text" id="mHead" placeholder="e.g. Product lead at Stripe"></label></div>
+    <div id="mCoWrap" style="display:grid;gap:16px">
+      <div class="two"><label>Company<input type="text" id="mCo"></label><label>Company link<input type="url" id="mCoUrl" placeholder="https://"></label></div>
+      <label>What the company does<textarea id="mCoDesc"></textarea></label>
+    </div>
+    <label class="check"><input type="checkbox" id="mActive" checked> Active (can sign in to the portal)</label>
+    <div class="foot"><button type="button" class="btn danger" id="memDel">Remove</button><div><button type="button" class="btn ghost" id="memClose">Close</button><button type="submit" class="btn" id="memSave">Save</button></div></div>
+    <p class="msg" id="memMsg" role="status"></p>
+  </form>
+  <div id="memExtra"></div>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 {
@@ -134,8 +196,8 @@ const sb=window.supabase.createClient(SB_URL,SB_KEY);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const show=id=>['login','denied','app'].forEach(s=>$(s).hidden=s!==id);
-const HELP={companies:'Companies built by Prodygy founders. They appear on the Companies page in this order.',cohort:'Student founders in the founding cohort. Mark a row as an open spot to invite applications.',board:'Mentors on the board. Use open spots for seats you are still filling, then edit them when someone joins.'};
-let tab='companies',items=[],editing=null;
+const HELP={applications:'Everyone who applied on the website, newest first. Open one to read it, set its status and keep private notes. Accepting a founder adds them to the founding cohort; accepting a mentor adds them to the board.',program:'Accepted founders and mentors. Assign mentors, schedule sessions and read weekly updates. Each person signs in at prodygy.vercel.app/portal.html with their email.',companies:'Companies built by Prodygy founders. They appear on the Companies page in this order.',cohort:'Student founders in the founding cohort. Mark a row as an open spot to invite applications.',board:'Mentors on the board. Use open spots for seats you are still filling, then edit them when someone joins.'};
+let tab='applications',items=[],editing=null;
 
 /* sign in */
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();
@@ -163,6 +225,12 @@ sb.auth.onAuthStateChange((_e,session)=>{const id=session?session.user.id:null;i
 const table=()=>tab==='companies'?'companies':'people';
 const load=async()=>{
   $('tabHelp').textContent=HELP[tab];$('appMsg').textContent='';
+  const content=['companies','cohort','board'].includes(tab);
+  $('appFilters').hidden=tab!=='applications';$('program').hidden=tab!=='program';$('rows').hidden=tab==='program';
+  $('addBtn').hidden=tab==='applications';$('addBtn').textContent=tab==='program'?'Add person':'Add';
+  $('footHint').innerHTML=content?'Changes appear on <a href="/" target="_blank" rel="noopener">prodygy.vercel.app</a> as soon as you save. Hidden items stay here but don\'t show on the site.':tab==='program'?'Founders and mentors sign in at <a href="/portal.html" target="_blank" rel="noopener">prodygy.vercel.app/portal.html</a>. Founders see their company, mentor, sessions and updates; mentors see only the founders assigned to them.':'New applications arrive here and in the prodygy.studio@gmail.com inbox.';
+  if(tab==='applications')return loadApps();
+  if(tab==='program')return loadProgram();
   let q=sb.from(table()).select('*').order('sort',{ascending:true}).order('created_at',{ascending:true});
   if(tab!=='companies')q=q.eq('team',tab);
   const {data,error}=await q;
@@ -183,6 +251,7 @@ const flash=(t,err)=>{$('appMsg').className='msg'+(err?' err':'');$('appMsg').te
 
 $('rows').addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;
+  if(tab==='applications')return openApp(apps.find(a=>a.id===b.closest('li').dataset.id));
   const id=b.closest('li').dataset.id,i=items.findIndex(x=>x.id===id),x=items[i];
   if(b.dataset.a==='edit')return openEdit(x);
   if(b.dataset.a==='vis'){const {error}=await sb.from(table()).update({visible:!x.visible}).eq('id',id);if(error)return flash('Could not save.',1);x.visible=!x.visible;draw();return flash(x.visible?'Now showing on the site.':'Hidden from the site.')}
@@ -205,7 +274,7 @@ const openEdit=x=>{
   $('fVisible').checked=x?x.visible:true;$('dlgMsg').textContent='';$('fName').classList.remove('bad');
   dlg.showModal();$('fName').focus();
 };
-$('addBtn').addEventListener('click',()=>openEdit(null));
+$('addBtn').addEventListener('click',()=>tab==='program'?openMember(null):openEdit(null));
 $('cancelBtn').addEventListener('click',()=>dlg.close());
 $('editForm').addEventListener('submit',async e=>{e.preventDefault();
   const name=$('fName').value.trim();
@@ -225,6 +294,180 @@ $('delBtn').addEventListener('click',async()=>{
   const {error}=await sb.from(table()).delete().eq('id',editing.id);
   if(error){$('dlgMsg').className='msg err';$('dlgMsg').textContent='Could not delete.';return}
   dlg.close();await load();flash('Deleted.');
+});
+
+
+/* ---------- applications ---------- */
+const STATUSES=[['all','All'],['new','New'],['reviewing','Reviewing'],['interview','Interview'],['accepted','Accepted'],['rejected','Rejected']];
+const KINDS=[['all','Everyone'],['founder','Founders'],['mentor','Mentors']];
+let apps=[],stF='all',kindF='all',cur=null;
+const fmt=d=>new Date(d).toLocaleString([], {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+const day=d=>new Date(d).toLocaleDateString([], {month:'short',day:'numeric'});
+const stLabel=v=>(STATUSES.find(x=>x[0]===v)||[v,v])[1];
+const drawChips=()=>{
+  const n=v=>apps.filter(a=>(v==='all'||a.status===v)&&(kindF==='all'||a.kind===kindF)).length;
+  $('stChips').innerHTML=STATUSES.map(([v,l])=>`<button data-st="${v}" aria-pressed="${stF===v}">${l} ${n(v)}</button>`).join('');
+  $('kindChips').innerHTML=KINDS.map(([v,l])=>`<button data-k="${v}" aria-pressed="${kindF===v}">${l}</button>`).join('');
+};
+$('appFilters').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.st)stF=b.dataset.st;if(b.dataset.k)kindF=b.dataset.k;drawApps()});
+const loadApps=async()=>{
+  const {data,error}=await sb.from('applications').select('*').order('created_at',{ascending:false});
+  if(error){flash('Could not load applications. Refresh and try again.',1);return}
+  apps=data;drawApps();
+};
+const drawApps=()=>{
+  drawChips();
+  const list=apps.filter(a=>(stF==='all'||a.status===stF)&&(kindF==='all'||a.kind===kindF));
+  if(!list.length){$('rows').innerHTML=`<li class="empty" style="display:block">${apps.length?'No applications match this filter.':'No applications yet. They show up here as soon as someone applies.'}</li>`;return}
+  $('rows').innerHTML=list.map(a=>`<li data-id="${esc(a.id)}" style="grid-template-columns:minmax(0,1fr) auto">
+    <div><div class="nm">${esc(a.name)}<span class="tag">${a.kind==='founder'?'Founder':'Mentor'}</span><span class="st ${esc(a.status)}">${esc(stLabel(a.status))}</span></div>
+    <div class="ds">${esc(a.kind==='founder'?[a.school,a.grade].filter(Boolean).join(', '):a.role||'')} · ${esc(day(a.created_at))}${a.notes?' · has notes':''}</div></div>
+    <div class="act"><button data-a="open">Open</button></div></li>`).join('');
+};
+const appDlg=$('appDlg');
+const openApp=a=>{if(!a)return;cur=a;
+  $('appTitle').textContent=a.name;
+  const rows=a.kind==='founder'?[['Applied as','Student founder'],['Email',a.email],['School',a.school],['Grade',a.grade],['Building',a.building],['Link',a.link]]
+    :[['Applied as','Mentor'],['Email',a.email],['Role',a.role],['LinkedIn',a.linkedin],['How they can help',a.help]];
+  rows.push(['Received',fmt(a.created_at)]);
+  $('appAns').innerHTML=rows.filter(r=>r[1]).map(([k,v])=>{let h=esc(v);if(k==='Email')h=`<a href="mailto:${esc(v)}">${h}</a>`;else if(/^https?:\/\//i.test(v))h=`<a href="${esc(v)}" target="_blank" rel="noopener">${h} ↗</a>`;return `<dt>${esc(k)}</dt><dd>${h}</dd>`}).join('');
+  $('appStatus').value=a.status;$('appNotes').value=a.notes||'';$('appDlgMsg').textContent='';
+  $('appAccept').textContent=a.member_id?(a.kind==='founder'?'In the cohort ✓':'On the board ✓'):(a.kind==='founder'?'Accept & add to cohort':'Accept & add to board');
+  $('appAccept').disabled=!!a.member_id;
+  appDlg.showModal();
+};
+const appMsg=(t,err)=>{$('appDlgMsg').className='msg'+(err?' err':'');$('appDlgMsg').textContent=t};
+$('appClose').addEventListener('click',()=>appDlg.close());
+$('appSave').addEventListener('click',async()=>{
+  const patch={status:$('appStatus').value,notes:$('appNotes').value};
+  $('appSave').disabled=true;const {error}=await sb.from('applications').update(patch).eq('id',cur.id);$('appSave').disabled=false;
+  if(error)return appMsg('Could not save. Try again.',1);
+  Object.assign(cur,patch);drawApps();appMsg('Saved.');
+});
+$('appDel').addEventListener('click',async()=>{
+  if(!confirm(`Delete ${cur.name}'s application for good? This can't be undone.`))return;
+  const {error}=await sb.from('applications').delete().eq('id',cur.id);
+  if(error)return appMsg('Could not delete.',1);
+  apps=apps.filter(a=>a.id!==cur.id);appDlg.close();drawApps();flash('Application deleted.');
+});
+$('appAccept').addEventListener('click',async()=>{
+  const a=cur,founder=a.kind==='founder';
+  if(!confirm(founder?`Accept ${a.name} and add them to the founding cohort? They'll be able to sign in to the founder portal with ${a.email}.`:`Accept ${a.name} and add them to the board of mentors? They'll be able to sign in to the mentor portal with ${a.email}.`))return;
+  $('appAccept').disabled=true;appMsg('Adding…');
+  try{
+    const email=a.email.trim().toLowerCase();
+    let {data:ex}=await sb.from('members').select('id,person_id').ilike('email',email).limit(1);
+    let mem=ex&&ex[0];
+    if(!mem){
+      const {data:last}=await sb.from('people').select('sort').eq('team',founder?'cohort':'board').order('sort',{ascending:false}).limit(1);
+      const sort=((last&&last[0]?.sort)||0)+1;
+      const {data:person,error:pe}=await sb.from('people').insert({team:founder?'cohort':'board',name:a.name,description:founder?(a.building||'').slice(0,160):(a.role||''),label:founder?'Founder':'Mentor',url:(founder?a.link:a.linkedin)||null,is_open:false,visible:false,sort}).select('id').single();
+      if(pe)throw pe;
+      const {data:m,error:me}=await sb.from('members').insert({role:a.kind,name:a.name,email,company:'',company_description:founder?(a.building||''):'',company_url:founder?(a.link||null):null,headline:founder?[a.school,a.grade].filter(Boolean).join(', '):(a.role||''),person_id:person.id,application_id:a.id}).select('id').single();
+      if(me)throw me;mem=m;
+    }
+    const {error:ue}=await sb.from('applications').update({status:'accepted',member_id:mem.id}).eq('id',a.id);
+    if(ue)throw ue;
+    a.status='accepted';a.member_id=mem.id;$('appStatus').value='accepted';
+    $('appAccept').textContent=founder?'In the cohort ✓':'On the board ✓';
+    appMsg(founder?'Added to the founding cohort and the founder portal. They are hidden on the public site until you click Show in the Founding cohort tab.':'Added to the board and the mentor portal. They are hidden on the public site until you click Show in the Board of mentors tab.');
+    drawApps();
+  }catch(err){console.error(err);$('appAccept').disabled=false;appMsg('Could not add them. Try again.',1)}
+});
+
+/* ---------- founders & mentors ---------- */
+let members=[],assigns=[],sessionsAll=[],updatesAll=[],notesAll=[],mem=null;
+const loadProgram=async()=>{
+  const [m,a,se,u,n]=await Promise.all([
+    sb.from('members').select('*').order('created_at',{ascending:true}),
+    sb.from('assignments').select('*'),
+    sb.from('sessions').select('*').order('starts_at',{ascending:true}),
+    sb.from('updates').select('*').order('created_at',{ascending:false}),
+    sb.from('mentor_notes').select('*').order('created_at',{ascending:false})]);
+  if([m,a,se,u,n].some(r=>r.error)){flash('Could not load. Refresh and try again.',1);return}
+  members=m.data;assigns=a.data;sessionsAll=se.data;updatesAll=u.data;notesAll=n.data;drawProgram();
+};
+const byId=id=>members.find(x=>x.id===id);
+const mentorsOf=fid=>assigns.filter(x=>x.founder_id===fid).map(x=>byId(x.mentor_id)).filter(Boolean);
+const foundersOf=mid=>assigns.filter(x=>x.mentor_id===mid).map(x=>byId(x.founder_id)).filter(Boolean);
+const drawProgram=()=>{
+  const now=Date.now();
+  const sec=(title,list,role)=>`<h2 class="groupt">${title}</h2><ul class="rows">${list.length?list.map(x=>{
+    const nextS=sessionsAll.find(s=>(role==='founder'?s.founder_id===x.id:s.mentor_id===x.id)&&new Date(s.starts_at)>now);
+    const lastU=role==='founder'?updatesAll.find(u=>u.founder_id===x.id):null;
+    const pair=role==='founder'?mentorsOf(x.id).map(m=>m.name).join(', ')||'No mentor yet':foundersOf(x.id).map(f=>f.name).join(', ')||'No founders yet';
+    const bits=[role==='founder'?(x.company||x.headline):x.headline,(role==='founder'?'Mentor: ':'Founders: ')+pair,nextS?'Next session '+day(nextS.starts_at):'',lastU?'Last update '+day(lastU.created_at):''].filter(Boolean);
+    return `<li data-id="${esc(x.id)}" class="${x.active?'':'hid'}" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="nm">${esc(x.name)}${x.active?'':'<span class="tag">Inactive</span>'}</div><div class="ds">${esc(bits.join(' · '))}</div></div><div class="act"><button data-a="open">Open</button></div></li>`}).join(''):`<li class="empty" style="display:block">None yet. Accept an application or use Add person.</li>`}</ul>`;
+  $('program').innerHTML=sec('Founders',members.filter(x=>x.role==='founder'),'founder')+sec('Mentors',members.filter(x=>x.role==='mentor'),'mentor');
+};
+$('program').addEventListener('click',e=>{const li=e.target.closest('li[data-id]');if(li&&e.target.closest('button'))openMember(byId(li.dataset.id))});
+const memDlg=$('memDlg');
+const memMsg=(t,err)=>{$('memMsg').className='msg'+(err?' err':'');$('memMsg').textContent=t};
+const syncRole=()=>{const f=$('mRole').value==='founder';$('mCoWrap').hidden=!f};
+$('mRole').addEventListener('change',syncRole);
+const openMember=x=>{mem=x||null;
+  $('memTitle').textContent=x?x.name:'Add person';
+  $('mName').value=x?.name||'';$('mEmail').value=x?.email||'';$('mRole').value=x?.role||'founder';$('mHead').value=x?.headline||'';
+  $('mCo').value=x?.company||'';$('mCoUrl').value=x?.company_url||'';$('mCoDesc').value=x?.company_description||'';$('mActive').checked=x?x.active:true;
+  $('memDel').hidden=!x;memMsg('');syncRole();drawExtra();memDlg.showModal();
+};
+const drawExtra=()=>{
+  const x=mem;if(!x){$('memExtra').innerHTML='';return}
+  const now=Date.now();
+  if(x.role==='founder'){
+    const mine=mentorsOf(x.id).map(m=>m.id),mentors=members.filter(m=>m.role==='mentor'&&m.active);
+    const ss=sessionsAll.filter(s=>s.founder_id===x.id),up=updatesAll.filter(u=>u.founder_id===x.id),nt=notesAll.filter(n=>n.founder_id===x.id);
+    $('memExtra').innerHTML=`
+    <div class="sec"><h3>Mentors</h3>${mentors.length?mentors.map(m=>`<label class="check"><input type="checkbox" data-assign="${esc(m.id)}" ${mine.includes(m.id)?'checked':''}> ${esc(m.name)}${m.headline?` <span class="hint">· ${esc(m.headline)}</span>`:''}</label>`).join(''):'<p class="hint">No mentors yet. Accept a mentor application or add one.</p>'}</div>
+    <div class="sec"><h3>Sessions</h3><ul class="mini">${ss.length?ss.map(s=>`<li><div><div>${esc(s.title)}${s.mentor_id&&byId(s.mentor_id)?' with '+esc(byId(s.mentor_id).name):''}</div><div class="when">${esc(fmt(s.starts_at))}${new Date(s.starts_at)<now?' · past':''}${s.link?` · <a href="${esc(s.link)}" target="_blank" rel="noopener">link</a>`:''}</div></div><button data-delsess="${esc(s.id)}" aria-label="Delete session">Delete</button></li>`).join(''):'<li class="hint">No sessions scheduled.</li>'}</ul>
+      <div class="inline" style="margin-top:10px"><label>When<input type="datetime-local" id="sWhen"></label><label>Title<input type="text" id="sTitle" placeholder="Mentor session"></label></div>
+      <div class="inline" style="margin-top:10px"><label>With<select id="sMentor"><option value="">Owners only</option>${mentors.map(m=>`<option value="${esc(m.id)}" ${mine[0]===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label><label>Video link (optional)<input type="url" id="sLink" placeholder="https://"></label><button class="btn ghost" type="button" id="sAdd">Add session</button></div></div>
+    <div class="sec"><h3>Weekly updates</h3><ul class="mini">${up.length?up.map(u=>`<li><div class="body">${esc(u.body)}</div><span class="when">${esc(day(u.created_at))}</span></li>`).join(''):'<li class="hint">No updates yet.</li>'}</ul></div>
+    <div class="sec"><h3>Mentor notes</h3><ul class="mini">${nt.length?nt.map(n=>`<li><div class="body">${esc(n.body)}</div><span class="when">${esc((byId(n.mentor_id)||{}).name||'')} · ${esc(day(n.created_at))}${n.shared?' · shared':' · private'}</span></li>`).join(''):'<li class="hint">No notes yet.</li>'}</ul></div>`;
+  }else{
+    const fs=foundersOf(x.id),nt=notesAll.filter(n=>n.mentor_id===x.id);
+    $('memExtra').innerHTML=`<div class="sec"><h3>Founders assigned</h3><ul class="mini">${fs.length?fs.map(f=>`<li><div>${esc(f.name)}${f.company?' · '+esc(f.company):''}</div></li>`).join(''):'<li class="hint">None yet. Open a founder to assign this mentor.</li>'}</ul></div>
+    <div class="sec"><h3>Notes written</h3><ul class="mini">${nt.length?nt.map(n=>`<li><div class="body">${esc(n.body)}</div><span class="when">${esc((byId(n.founder_id)||{}).name||'')} · ${esc(day(n.created_at))}</span></li>`).join(''):'<li class="hint">No notes yet.</li>'}</ul></div>`;
+  }
+};
+$('memExtra').addEventListener('change',async e=>{
+  const c=e.target.closest('[data-assign]');if(!c)return;
+  const row={mentor_id:c.dataset.assign,founder_id:mem.id};
+  const res=c.checked?await sb.from('assignments').insert(row):await sb.from('assignments').delete().eq('mentor_id',row.mentor_id).eq('founder_id',row.founder_id);
+  if(res.error){c.checked=!c.checked;return memMsg('Could not update mentors.',1)}
+  if(c.checked)assigns.push(row);else assigns=assigns.filter(a=>!(a.mentor_id===row.mentor_id&&a.founder_id===row.founder_id));
+  memMsg(c.checked?'Mentor assigned.':'Mentor removed.');drawProgram();
+});
+$('memExtra').addEventListener('click',async e=>{
+  if(e.target.id==='sAdd'){
+    const w=$('sWhen').value;if(!w)return memMsg('Pick a date and time for the session.',1);
+    let link=$('sLink').value.trim();if(link&&!/^https?:\/\//i.test(link))link='https://'+link;
+    const row={founder_id:mem.id,mentor_id:$('sMentor').value||null,starts_at:new Date(w).toISOString(),title:$('sTitle').value.trim()||'Mentor session',link:link||null};
+    const {data,error}=await sb.from('sessions').insert(row).select('*').single();
+    if(error)return memMsg('Could not add the session.',1);
+    sessionsAll.push(data);sessionsAll.sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));drawExtra();drawProgram();memMsg('Session added. It shows in the founder\'s and mentor\'s portal.');
+  }
+  const d=e.target.closest('[data-delsess]');
+  if(d){if(!confirm('Delete this session?'))return;const {error}=await sb.from('sessions').delete().eq('id',d.dataset.delsess);if(error)return memMsg('Could not delete.',1);sessionsAll=sessionsAll.filter(s=>s.id!==d.dataset.delsess);drawExtra();drawProgram()}
+});
+$('memClose').addEventListener('click',()=>memDlg.close());
+$('memForm').addEventListener('submit',async e=>{e.preventDefault();
+  const name=$('mName').value.trim(),email=$('mEmail').value.trim().toLowerCase();
+  if(!name||!/^\S+@\S+\.\S+$/.test(email))return memMsg('Name and a valid email are required.',1);
+  let cu=$('mCoUrl').value.trim();if(cu&&!/^https?:\/\//i.test(cu))cu='https://'+cu;
+  const row={name,email,role:$('mRole').value,headline:$('mHead').value.trim(),company:$('mCo').value.trim(),company_description:$('mCoDesc').value.trim(),company_url:cu||null,active:$('mActive').checked};
+  $('memSave').disabled=true;
+  const res=mem?await sb.from('members').update(row).eq('id',mem.id).select('*').single():await sb.from('members').insert(row).select('*').single();
+  $('memSave').disabled=false;
+  if(res.error)return memMsg(res.error.code==='23505'?'Someone with that email is already in the program.':'Could not save. Try again.',1);
+  if(mem)Object.assign(mem,res.data);else{members.push(res.data);mem=res.data;$('memDel').hidden=false;$('memTitle').textContent=mem.name}
+  drawExtra();drawProgram();memMsg('Saved.');
+});
+$('memDel').addEventListener('click',async()=>{
+  if(!confirm(`Remove ${mem.name} from the program? Their portal access, sessions, updates and notes are deleted. (Untick Active instead to keep their history.)`))return;
+  const {error}=await sb.from('members').delete().eq('id',mem.id);
+  if(error)return memMsg('Could not remove.',1);
+  memDlg.close();loadProgram();flash('Removed.');
 });
 
 /* tabs */
