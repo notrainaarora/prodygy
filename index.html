@@ -38,7 +38,7 @@ body.home .mark{opacity:0;pointer-events:none}
 nav{display:flex;gap:26px}
 nav a{font-size:14px;color:var(--mute);padding:10px 0;transition:color .2s}
 nav a:hover,nav a[aria-current]{color:var(--ink)}
-@media(max-width:460px){nav{gap:16px}nav a,.dd>button{font-size:13px}.menu{right:-60px}}
+@media(max-width:460px){nav{gap:12px}nav a,.dd>button{font-size:13px}.menu{right:-60px}.mark{font-size:15px;letter-spacing:.1em}}
 
 /* hero */
 .hero{position:relative;height:100svh;min-height:560px;overflow:hidden;display:flex;align-items:flex-end}
@@ -146,10 +146,10 @@ footer a:hover{color:var(--ink)}
 .hint.show{opacity:.75}
 @media(max-width:640px),(hover:none){.hint{display:none}}
 .list{border-top:1px solid var(--line)}
-.list li{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) auto;gap:24px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+.list li{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
 .list .n{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(24px,2.4vw,32px);line-height:1.1}
 .list .d{color:var(--mute);font-size:15px}
-.list .t{font-size:14px;color:var(--soft);white-space:nowrap}
+.list .t{font-size:14px;color:var(--soft);white-space:nowrap;text-align:right}
 .list .open .n{color:var(--mute)}
 .list .t a{border-bottom:1px solid #3a3a3a;padding-bottom:1px}
 .list .t a:hover{color:var(--ink);border-color:var(--ink)}
@@ -240,7 +240,7 @@ footer a:hover{color:var(--ink)}
     <p class="intro">Products and companies built by Prodygy founders.</p>
     <div class="block">
       <div class="filters" id="filters"></div>
-      <div class="tiles" id="dir"></div>
+      <ul class="list" id="dir"></ul>
     </div>
   </div>
 </section>
@@ -311,8 +311,7 @@ const row=c=>{const inner=`<span class="n">${esc(c.n)}</span><span class="d">${e
 
 let cat='All';
 const cats=['All',...new Set(companies.map(c=>c.c))];
-const tile=c=>{const inner=`<div class="in"><div><h2>${esc(c.n)}</h2><p>${esc(c.l)}</p></div>${c.u?'<span class="go">Visit →</span>':`<span class="st">${esc(c.s)}</span>`}</div>`;
-  return c.u?`<a class="tile" style="--g:${c.g}" href="${esc(c.u)}">${inner}</a>`:`<div class="tile" style="--g:${c.g}">${inner}</div>`};
+const tile=c=>`<li><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${esc(c.c)} · ${c.u?`<a href="${esc(c.u)}">Visit ↗</a>`:esc(c.s)}</span></li>`;
 const drawDir=()=>{
   $('filters').innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   $('dir').innerHTML=companies.filter(c=>cat==='All'||c.c===cat).map(tile).join('');
