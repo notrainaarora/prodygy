@@ -282,19 +282,19 @@ footer a:hover{color:var(--ink)}
 <script>
 {
 /* ---- Edit content here ---- */
-const companies=[
+let companies=[
   {n:'Jude',c:'AI',l:'AI sales-call coach that helps reps get better with every call.',s:'Building',u:'https://withjude.com',g:'radial-gradient(120% 90% at 78% 20%,#2c3a52 0%,#121722 45%,#07090c 100%)'},
-  {n:'Stunt',c:'Consumer',l:'One app for everything a cheer team runs on.',s:'Launching 2026',g:'radial-gradient(120% 90% at 20% 15%,#4a2f3a 0%,#1a1216 48%,#08070a 100%)'},
-  {n:'Rug Pull Radar',c:'Fintech',l:'AI tool that flags likely crypto scams before people buy in.',s:'Hackathon winner',g:'radial-gradient(120% 90% at 70% 10%,#24423a 0%,#101a17 48%,#060908 100%)'}
+  {n:'Stunt',c:'Consumer',l:'The all-in-one app built for cheer teams.',s:'Launching 2026',u:'https://stunt.fit'},
+  {n:'Rug Pull Radar',c:'Fintech',l:'AI tool that flags likely crypto scams before people buy in.',s:'Hackathon winner',u:'https://rugrat.xyz'}
 ];
 const people=[
   {n:'Raina Arora',r:'Founder & CEO',bio:['Raina founded Prodygy in September 2026 to give high school builders a place to take their ideas further, with people who have done it before.','She is a high school sophomore in the Bay Area, building Jude, an AI sales-call coach, and Stunt, an app for cheer teams. Her AI tool Rug Pull Radar won a scholarship at the Veritas AI hackathon. Since 2022 she has run Touched by MS, a nonprofit she co-founded with her siblings.']}
 ];
-const cohort=[
+let cohort=[
   {n:'Raina Arora',d:'Founder & CEO of Prodygy. Building Jude and Stunt.',t:'Founder'},
   {n:'Your name',d:'Applications are open for our founding cohort.',t:'Apply',o:1}
 ];
-const board=[
+let board=[
   {n:'Product & engineering',d:'Has shipped software from first version to real users.'},
   {n:'Go-to-market & sales',d:'Has sold a product, built a pipeline or run a launch.'},
   {n:'Design & brand',d:'Helps founders make something people want to use.'},
@@ -310,8 +310,8 @@ const row=c=>{const inner=`<span class="n">${esc(c.n)}</span><span class="d">${e
 
 
 let cat='All';
-const cats=['All',...new Set(companies.map(c=>c.c))];
-const tile=c=>`<li><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${esc(c.c)} · ${c.u?`<a href="${esc(c.u)}">Visit ↗</a>`:esc(c.s)}</span></li>`;
+let cats=['All',...new Set(companies.map(c=>c.c).filter(Boolean))];
+const tile=c=>`<li><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${[c.c?esc(c.c):'',c.u?`<a href="${esc(c.u)}">Visit ↗</a>`:esc(c.s)].filter(Boolean).join(' · ')}</span></li>`;
 const drawDir=()=>{
   $('filters').innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   $('dir').innerHTML=companies.filter(c=>cat==='All'||c.c===cat).map(tile).join('');
@@ -320,9 +320,19 @@ $('filters').addEventListener('click',e=>{const b=e.target.closest('button');if(
 drawDir();
 
 $('people').innerHTML=people.map(p=>`<div class="person"><p class="who">${esc(p.n)}<span>${esc(p.r)}</span></p><div class="bio">${p.bio.map(b=>`<p>${esc(b)}</p>`).join('')}</div></div>`).join('');
-const li=(x,m)=>`<li class="${x.o?'open':''}"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="t">${x.o?`<a href="#apply"${m?' data-m':''}>${esc(x.t)}</a>`:esc(x.t)}</span></li>`;
-$('cohortList').innerHTML=cohort.map(x=>li(x,0)).join('');
-$('boardList').innerHTML=board.map(x=>li(x,1)).join('');
+const li=(x,m)=>`<li class="${x.o?'open':''}"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="t">${x.o?`<a href="#apply"${m?' data-m':''}>${esc(x.t)}</a>`:x.u?`<a href="${esc(x.u)}">${esc(x.t||'Visit')} ↗</a>`:esc(x.t)}</span></li>`;
+const drawTeams=()=>{$('cohortList').innerHTML=cohort.map(x=>li(x,0)).join('');$('boardList').innerHTML=board.map(x=>li(x,1)).join('')};
+drawTeams();
+/* live content from the Prodygy database; the lists above are the fallback */
+const DB='https://bipwnsjtbwbfvxtoltfx.supabase.co/rest/v1',DBK='sb_publishable_pn1Pt6vlZoR2ogsQyZ72gQ_EObjaY2u';
+const getDB=t=>fetch(DB+'/'+t,{headers:{apikey:DBK,Authorization:'Bearer '+DBK}}).then(r=>{if(!r.ok)throw 0;return r.json()});
+Promise.all([getDB('companies?select=*&visible=eq.true&order=sort.asc,created_at.asc'),getDB('people?select=*&visible=eq.true&order=sort.asc,created_at.asc')]).then(([cs,ps])=>{
+  companies=cs.map(c=>({n:c.name,c:c.category,l:c.description,s:c.status,u:c.url||''}));
+  const mp=p=>({n:p.name,d:p.description,t:p.label,o:p.is_open,u:p.url||''});
+  cohort=ps.filter(p=>p.team==='cohort').map(mp);board=ps.filter(p=>p.team==='board').map(mp);
+  cats=['All',...new Set(companies.map(c=>c.c).filter(Boolean))];if(!cats.includes(cat))cat='All';
+  drawDir();drawTeams();
+}).catch(()=>{});
 
 let mode='F';
 const setMode=m=>{mode=m;$('tF').setAttribute('aria-selected',m==='F');$('tM').setAttribute('aria-selected',m==='M');$('fF').hidden=m!=='F';$('fM').hidden=m!=='M';$('done').classList.remove('show')};
