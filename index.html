@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prodygy</title>
+<meta name="description" content="Prodygy is a venture studio for high school founders.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia,serif' font-size='38' fill='%23fff'%3EP%3C/text%3E%3C/svg%3E">
+<meta property="og:title" content="Prodygy">
+<meta property="og:description" content="A venture studio for high school founders.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* VOICE  hushed and assured: Bond, Founders Fund. The name does the talking
+   IDEA   a magnet over iron filings: potential, lined up by a pull
+   PICTURE full-screen field of bold white strokes that swirl toward the cursor
+   COLOUR pure black ground, white strokes and type, one grey
+   TYPE   Cormorant Garamond caps for the name and titles, Instrument Sans for text
+   LAYOUT wordmark centred, pill bottom-centre, place and year in the corners */
+:root{color-scheme:dark;--bg:#000000;--ink:#f2f2f0;--soft:#bdbdba;--mute:#7c7c79;--line:#1e1e1e}
+*{box-sizing:border-box;min-width:0}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:16px/1.6 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+p,h1,h2,h3,ul{margin:0}
+ul{padding:0;list-style:none}
+.pad{padding-left:max(28px,3vw);padding-right:max(28px,3vw)}
+.col{max-width:1320px;margin:0 auto}
+
+header{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;height:76px}
+.mark{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:19px;letter-spacing:.14em;text-transform:uppercase;transition:opacity .3s}
+body.home .mark{opacity:0;pointer-events:none}
+.serif{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+nav{display:flex;gap:26px}
+nav a{font-size:14px;color:var(--mute);padding:10px 0;transition:color .2s}
+nav a:hover,nav a[aria-current]{color:var(--ink)}
+@media(max-width:460px){nav{gap:16px}nav a,.dd>button{font-size:13px}.menu{right:-60px}}
+
+/* hero */
+.hero{position:relative;height:100svh;min-height:560px;overflow:hidden;display:flex;align-items:flex-end}
+.hero .bg{position:absolute;inset:0;background:var(--bg)}
+.hero::after{content:none}
+.hero{align-items:center;justify-content:center}
+.center{position:relative;z-index:2;pointer-events:none;text-align:center;padding:0 24px;margin-top:-16vh}
+.hero h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(56px,9.6vw,140px);line-height:1;letter-spacing:.12em;color:#fff;text-transform:uppercase;margin-right:-.12em}
+.tag{margin-top:26px;font-size:clamp(16px,1.45vw,21px);color:#e6e6e3;letter-spacing:.01em}
+.cta{position:absolute;z-index:2;left:50%;bottom:76px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 22px;border-radius:999px;font-size:14px;color:#000;background:#f2f2f0;white-space:nowrap;transition:background .25s}
+.cta:hover{background:#fff}
+.corners{position:absolute;z-index:2;left:0;right:0;bottom:28px;pointer-events:none;display:flex;justify-content:space-between;font-size:13px;color:var(--mute)}
+body.home footer{display:none}
+@media(prefers-reduced-motion:no-preference){.hero .bg{animation:drift 3.2s cubic-bezier(.2,.7,.2,1) both}.center{animation:rise 1.6s .5s ease both}@keyframes drift{from{transform:scale(1.07);opacity:0}to{transform:none;opacity:1}}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
+
+/* sections */
+.sec{padding-block:clamp(72px,10vw,140px);border-top:1px solid var(--line)}
+.sec:first-of-type{border-top:0}
+.lead{font-size:clamp(20px,1.7vw,24px);line-height:1.5;max-width:30em;color:var(--ink)}
+.lead+.lead{margin-top:1.1em;color:var(--soft)}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,4vw,64px);margin-top:clamp(64px,8vw,112px)}
+.three h3{font-weight:500;font-size:17px;margin-bottom:10px}
+.three p{color:var(--mute);font-size:15px;max-width:24em}
+@media(max-width:760px){.three{grid-template-columns:minmax(0,1fr)}}
+.k{font-size:14px;color:var(--mute);margin-bottom:28px}
+.rows{border-top:1px solid var(--line)}
+.rows li{border-bottom:1px solid var(--line)}
+.rows .r{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:24px;padding:20px 0;align-items:baseline}
+.rows .n{font-size:17px}
+.rows .d{color:var(--mute);font-size:15px}
+.rows .t{color:var(--mute);font-size:14px;white-space:nowrap}
+.rows a.r:hover .n{color:var(--soft)}
+@media(max-width:640px){.rows .r{grid-template-columns:minmax(0,1fr) auto;gap:4px 16px}.rows .d{grid-column:1/-1;grid-row:2}}
+.more{display:inline-block;margin-top:32px;font-size:15px;color:var(--soft);border-bottom:1px solid var(--line);padding-bottom:2px}
+.more:hover{color:var(--ink);border-color:var(--ink)}
+
+/* inner pages */
+.page{padding-top:clamp(150px,20vh,220px);padding-bottom:clamp(72px,10vw,140px)}
+.page h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(36px,4.2vw,60px);line-height:1.08;letter-spacing:-.005em;max-width:16em;text-wrap:balance}
+.page .intro{margin-top:22px;color:var(--soft);font-size:18px;max-width:34em}
+.block{margin-top:clamp(64px,8vw,104px)}
+.person{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:32px;padding-top:28px;border-top:1px solid var(--line)}
+.person .who{font-size:17px}
+.person .who span{display:block;color:var(--mute);font-size:14px;margin-top:2px}
+.person .bio p{color:var(--soft);font-size:17px;max-width:34em}
+.person .bio p+p{margin-top:1em}
+@media(max-width:640px){.person{grid-template-columns:minmax(0,1fr);gap:16px}}
+.filters{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:24px}
+.filters button{background:none;border:0;padding:8px 0;font:inherit;font-size:14px;color:var(--mute);cursor:pointer}
+.filters button[aria-pressed=true]{color:var(--ink)}
+
+/* company tiles, Founders Fund style */
+.tiles{display:grid;gap:12px}
+.tile{position:relative;display:flex;align-items:flex-end;min-height:clamp(320px,52vh,520px);border-radius:4px;overflow:hidden;padding:clamp(24px,3vw,44px);background:var(--g)}
+.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(3,4,6,.75),rgba(3,4,6,0) 60%)}
+.tile .in{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;width:100%;flex-wrap:wrap}
+.tile h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(40px,5vw,72px);line-height:1}
+.tile{color:#f1f1ef}
+.tile p{margin-top:12px;color:#c9cbcd;max-width:30em}
+.tile .go{font-size:14px;color:#f1f1ef;white-space:nowrap;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+a.tile:hover .go{background:rgba(255,255,255,.14)}
+.tile .st{font-size:14px;color:#c9cbcd;white-space:nowrap}
+
+/* form */
+.tabs{display:flex;gap:26px;margin-bottom:44px}
+.tabs button{background:none;border:0;padding:8px 0;font:inherit;font-size:15px;color:var(--mute);cursor:pointer;border-bottom:1px solid transparent}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
+form{display:grid;gap:30px;max-width:640px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px}
+@media(max-width:560px){.two{grid-template-columns:minmax(0,1fr)}}
+label{display:grid;gap:4px;font-size:13px;color:var(--mute)}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid #2c2c2c;border-radius:0;padding:10px 0;min-height:46px;width:100%;-webkit-appearance:none;appearance:none}
+select option{background:#111;color:#f2f2f0}
+textarea{min-height:88px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink)}
+input.bad,textarea.bad{border-color:#e0675e}
+.submit{justify-self:start;background:var(--ink);color:var(--bg);border:0;border-radius:999px;min-height:46px;padding:0 26px;font:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.submit:hover{background:#fff}
+:focus-visible{outline:1px solid var(--soft);outline-offset:4px}
+.done{display:none;max-width:640px}
+.done.show{display:block}
+.done p{margin-top:10px;color:var(--soft)}
+
+footer{border-top:1px solid var(--line)}
+footer .col{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:40px;font-size:14px;color:var(--mute)}
+footer .l{line-height:1.8}
+footer .r{display:flex;gap:22px}
+footer a:hover{color:var(--ink)}
+
+/* dropdown */
+.dd{position:relative}
+.dd>button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;font:inherit;font-size:14px;color:var(--mute);padding:10px 0;cursor:pointer;transition:color .2s}
+.dd>button svg{transition:transform .25s}
+.dd>button:hover,.dd.open>button,.dd>button[aria-current]{color:var(--ink)}
+.dd.open>button svg{transform:rotate(180deg)}
+.menu{position:absolute;top:calc(100% + 6px);right:-14px;min-width:220px;padding:8px;border-radius:12px;background:rgba(16,16,16,.86);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .2s,transform .2s,visibility .2s}
+.dd.open .menu{opacity:1;visibility:visible;transform:none}
+.menu a{display:block;padding:12px 14px;border-radius:8px;font-size:14px;color:var(--soft)}
+.menu a span{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.menu a:hover,.menu a:focus-visible{background:rgba(255,255,255,.07);color:var(--ink)}
+@media(hover:hover) and (min-width:700px){.dd:hover .menu{opacity:1;visibility:visible;transform:none}.dd:hover>button{color:var(--ink)}}
+#sky{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
+.hero::after{z-index:1}
+.hint{position:absolute;z-index:2;left:50%;bottom:34px;transform:translateX(-50%);font-size:12px;color:var(--mute);opacity:.0;transition:opacity 1.2s;pointer-events:none;white-space:nowrap}
+.hint.show{opacity:.75}
+@media(max-width:640px),(hover:none){.hint{display:none}}
+.list{border-top:1px solid var(--line)}
+.list li{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) auto;gap:24px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+.list .n{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:clamp(24px,2.4vw,32px);line-height:1.1}
+.list .d{color:var(--mute);font-size:15px}
+.list .t{font-size:14px;color:var(--soft);white-space:nowrap}
+.list .open .n{color:var(--mute)}
+.list .t a{border-bottom:1px solid #3a3a3a;padding-bottom:1px}
+.list .t a:hover{color:var(--ink);border-color:var(--ink)}
+@media(max-width:640px){.list li{grid-template-columns:minmax(0,1fr) auto;gap:6px 16px}.list .d{grid-column:1/-1;grid-row:2}}
+
+[data-page]{display:none}
+[data-page].on{display:block}
+</style>
+</head>
+<body>
+
+<header class="pad">
+  <a class="mark" href="#home">Prodygy</a>
+  <nav id="nav">
+    <a href="#about">About</a>
+    <div class="dd" id="dd">
+      <button type="button" id="ddBtn" aria-expanded="false" aria-haspopup="true">Team <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="m2 3.5 3 3 3-3"/></svg></button>
+      <div class="menu" role="menu">
+        <a href="#cohort" role="menuitem">Founding cohort<span>Our student founders</span></a>
+        <a href="#board" role="menuitem">Board of mentors<span>The professionals guiding them</span></a>
+      </div>
+    </div>
+    <a href="#companies">Companies</a>
+    <a href="#apply">Apply</a>
+  </nav>
+</header>
+
+<section data-page="home">
+  <div class="hero">
+    <div class="bg" role="img" aria-label="A field of white lines that swirl toward the cursor"></div>
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="center">
+      <h1>Prodygy</h1>
+      <p class="tag">A venture studio for high school founders.</p>
+    </div>
+    <a class="cta" href="#apply">Apply to Prodygy <span aria-hidden="true">→</span></a>
+    <div class="corners pad"><span>SF Bay Area</span><span>Est. 2026</span></div>
+    <p class="hint" id="hint">Move to bend the field</p>
+  </div>
+</section>
+
+<section data-page="about" class="pad">
+  <div class="col page">
+    <h1>Run by a high school founder, for high school founders.</h1>
+    <p class="intro">Most high schoolers with a business idea have nowhere to take it. Class projects end with the semester, competitions end at the pitch, and the people who have built companies are hard to reach at 16. Prodygy exists to change that.</p>
+    <div class="three" style="margin-top:clamp(56px,7vw,96px)">
+      <div><h3>Built by students</h3><p>An app, a service, a tool or a business, treated as a company with real users.</p></div>
+      <div><h3>Built with mentors</h3><p>Each founder works one-on-one with a professional from our board, a few hours a week.</p></div>
+      <div><h3>Built together</h3><p>A community of high schoolers trading feedback and pushing each other to finish.</p></div>
+    </div>
+    <div class="block">
+      <p class="k">Founder</p>
+      <div id="people"></div>
+    </div>
+    <div class="block">
+      <p class="k">Team</p>
+      <ul class="list">
+        <li><span class="n">Founding cohort</span><span class="d">The high school founders building with Prodygy.</span><span class="t"><a href="#cohort">View</a></span></li>
+        <li><span class="n">Board of mentors</span><span class="d">Founders, operators and investors guiding them.</span><span class="t"><a href="#board">View</a></span></li>
+      </ul>
+    </div>
+    <div class="block">
+      <p class="k">Where we are</p>
+      <p class="lead" style="color:var(--soft)">Founded in September 2026. Our goal is to support 50 to 100 student-built projects over the next two years. No investment and no equity, just guidance.</p>
+    </div>
+  </div>
+</section>
+
+<section data-page="cohort" class="pad">
+  <div class="col page">
+    <h1>Founding cohort</h1>
+    <p class="intro">High schoolers building real products and companies with Prodygy.</p>
+    <div class="block"><ul class="list" id="cohortList"></ul></div>
+  </div>
+</section>
+
+<section data-page="board" class="pad">
+  <div class="col page">
+    <h1>Board of mentors</h1>
+    <p class="intro">Working founders, operators and investors who each give one founder a few hours a week. We are filling our founding seats now.</p>
+    <div class="block"><ul class="list" id="boardList"></ul></div>
+  </div>
+</section>
+
+<section data-page="companies" class="pad">
+  <div class="col page">
+    <h1>Companies</h1>
+    <p class="intro">Products and companies built by Prodygy founders.</p>
+    <div class="block">
+      <div class="filters" id="filters"></div>
+      <div class="tiles" id="dir"></div>
+    </div>
+  </div>
+</section>
+
+<section data-page="apply" class="pad">
+  <div class="col page">
+    <h1>Get involved.</h1>
+    <p class="intro">If you are a high schooler with something you want to build, or a founder, operator or investor willing to mentor one a few hours a week, we'd like to hear from you.</p>
+    <div class="block">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tF" aria-selected="true">Founders</button>
+        <button role="tab" id="tM" aria-selected="false">Mentors</button>
+      </div>
+      <form id="fF" novalidate>
+        <div class="two"><label>Name<input id="fN" required autocomplete="name"></label><label>Email<input id="fE" type="email" required autocomplete="email"></label></div>
+        <div class="two"><label>School<input id="fS" required></label><label>Grade<select id="fG"><option>9th</option><option>10th</option><option>11th</option><option>12th</option></select></label></div>
+        <label>What are you building?<textarea id="fI" required></textarea></label>
+        <label>Link (optional)<input id="fL" type="url" placeholder="https://"></label>
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        <button class="submit" type="submit">Apply</button>
+      </form>
+      <form id="fM" novalidate hidden>
+        <div class="two"><label>Name<input id="mN" required autocomplete="name"></label><label>Email<input id="mE" type="email" required autocomplete="email"></label></div>
+        <div class="two"><label>Role and company<input id="mR" required></label><label>LinkedIn<input id="mL" type="url" placeholder="https://"></label></div>
+        <label>How could you help a founder?<textarea id="mH"></textarea></label>
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        <button class="submit" type="submit">Join the board</button>
+      </form>
+      <div class="done" id="done" role="status"><h2 style="font-weight:400;font-size:26px" id="doneT"></h2><p id="doneP"></p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="pad"><div class="col">
+  <p class="l">SF Bay Area<br>prodygy.studio</p>
+  <div class="r"><a href="#about">About</a><a href="#companies">Companies</a><a href="#apply">Apply</a><span>© 2026</span></div>
+</div></footer>
+
+<script>
+{
+/* ---- Edit content here ---- */
+const companies=[
+  {n:'Jude',c:'AI',l:'AI sales-call coach that helps reps get better with every call.',s:'Building',u:'https://withjude.com',g:'radial-gradient(120% 90% at 78% 20%,#2c3a52 0%,#121722 45%,#07090c 100%)'},
+  {n:'Stunt',c:'Consumer',l:'One app for everything a cheer team runs on.',s:'Launching 2026',g:'radial-gradient(120% 90% at 20% 15%,#4a2f3a 0%,#1a1216 48%,#08070a 100%)'},
+  {n:'Rug Pull Radar',c:'Fintech',l:'AI tool that flags likely crypto scams before people buy in.',s:'Hackathon winner',g:'radial-gradient(120% 90% at 70% 10%,#24423a 0%,#101a17 48%,#060908 100%)'}
+];
+const people=[
+  {n:'Raina Arora',r:'Founder & CEO',bio:['Raina founded Prodygy in September 2026 to give high school builders a place to take their ideas further, with people who have done it before.','She is a high school sophomore in the Bay Area, building Jude, an AI sales-call coach, and Stunt, an app for cheer teams. Her AI tool Rug Pull Radar won a scholarship at the Veritas AI hackathon. Since 2022 she has run Touched by MS, a nonprofit she co-founded with her siblings.']}
+];
+const cohort=[
+  {n:'Raina Arora',d:'Founder & CEO of Prodygy. Building Jude and Stunt.',t:'Founder'},
+  {n:'Your name',d:'Applications are open for our founding cohort.',t:'Apply',o:1}
+];
+const board=[
+  {n:'Product & engineering',d:'Has shipped software from first version to real users.'},
+  {n:'Go-to-market & sales',d:'Has sold a product, built a pipeline or run a launch.'},
+  {n:'Design & brand',d:'Helps founders make something people want to use.'},
+  {n:'Venture & finance',d:'Knows how companies are funded and built.'},
+  {n:'Operations',d:'Has turned a scrappy project into something that runs.'}
+].map(b=>({...b,t:'Seat open',o:1}));
+/* --------------------------- */
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const row=c=>{const inner=`<span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${esc(c.u?'Visit ↗':c.s)}</span>`;
+  return `<li>${c.u?`<a class="r" href="${esc(c.u)}">${inner}</a>`:`<div class="r">${inner}</div>`}</li>`};
+
+
+let cat='All';
+const cats=['All',...new Set(companies.map(c=>c.c))];
+const tile=c=>{const inner=`<div class="in"><div><h2>${esc(c.n)}</h2><p>${esc(c.l)}</p></div>${c.u?'<span class="go">Visit →</span>':`<span class="st">${esc(c.s)}</span>`}</div>`;
+  return c.u?`<a class="tile" style="--g:${c.g}" href="${esc(c.u)}">${inner}</a>`:`<div class="tile" style="--g:${c.g}">${inner}</div>`};
+const drawDir=()=>{
+  $('filters').innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  $('dir').innerHTML=companies.filter(c=>cat==='All'||c.c===cat).map(tile).join('');
+};
+$('filters').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cat=b.dataset.c;drawDir()}});
+drawDir();
+
+$('people').innerHTML=people.map(p=>`<div class="person"><p class="who">${esc(p.n)}<span>${esc(p.r)}</span></p><div class="bio">${p.bio.map(b=>`<p>${esc(b)}</p>`).join('')}</div></div>`).join('');
+const li=(x,m)=>`<li class="${x.o?'open':''}"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="t">${x.o?`<a href="#apply"${m?' data-m':''}>${esc(x.t)}</a>`:esc(x.t)}</span></li>`;
+$('cohortList').innerHTML=cohort.map(x=>li(x,0)).join('');
+$('boardList').innerHTML=board.map(x=>li(x,1)).join('');
+
+let mode='F';
+const setMode=m=>{mode=m;$('tF').setAttribute('aria-selected',m==='F');$('tM').setAttribute('aria-selected',m==='M');$('fF').hidden=m!=='F';$('fM').hidden=m!=='M';$('done').classList.remove('show')};
+$('tF').addEventListener('click',()=>setMode('F'));
+$('tM').addEventListener('click',()=>setMode('M'));
+const ENDPOINT='https://formsubmit.co/ajax/notrainaarora@gmail.com';
+const val=id=>$(id)?$(id).value.trim():'';
+const hook=(f,nameId,msg)=>f.addEventListener('submit',async e=>{e.preventDefault();
+  const bad=[...f.querySelectorAll('[required]')].find(x=>!x.value.trim()||(x.type==='email'&&!/^\S+@\S+\.\S+$/.test(x.value)));
+  if(bad){bad.classList.add('bad');bad.focus();return}
+  if(f.querySelector('[name=_honey]').value)return;
+  const founder=f.id==='fF',btn=f.querySelector('.submit'),label=btn.textContent;
+  const data=founder?{_subject:'New Prodygy founder application: '+val('fN'),Type:'Student founder',Name:val('fN'),Email:val('fE'),School:val('fS'),Grade:val('fG'),Building:val('fI'),Link:val('fL')}
+    :{_subject:'New Prodygy mentor application: '+val('mN'),Type:'Mentor',Name:val('mN'),Email:val('mE'),Role:val('mR'),LinkedIn:val('mL'),Help:val('mH')};
+  data._template='table';data._replyto=founder?val('fE'):val('mE');
+  btn.disabled=true;btn.textContent='Sending…';
+  try{const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)});
+    if(!r.ok)throw 0;
+    $('doneT').textContent=`Thank you, ${$(nameId).value.trim().split(' ')[0]}.`;$('doneP').textContent=msg;
+    f.hidden=true;f.reset();$('done').classList.add('show')}
+  catch(_){btn.textContent='Something went wrong. Try again';setTimeout(()=>btn.textContent=label,4000)}
+  finally{btn.disabled=false;if(btn.textContent==='Sending…')btn.textContent=label}});
+hook($('fF'),'fN','We read every application and will be in touch by email.');
+hook($('fM'),'mN','We will reach out by email to set up a short conversation.');
+document.addEventListener('input',e=>e.target.classList?.remove('bad'));
+
+const pages=['home','about','cohort','board','companies','apply'];
+let wantM=false;
+document.addEventListener('click',e=>{if(e.target.closest('[data-m]'))wantM=true});
+const dd=$('dd'),ddBtn=$('ddBtn');
+const closeDd=()=>{dd.classList.remove('open');ddBtn.setAttribute('aria-expanded','false')};
+ddBtn.addEventListener('click',e=>{e.stopPropagation();const o=dd.classList.toggle('open');ddBtn.setAttribute('aria-expanded',o)});
+document.addEventListener('click',e=>{if(!dd.contains(e.target))closeDd()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDd()});
+const route=()=>{const h=location.hash.slice(1);
+  const p=pages.includes(h)?h:'home';
+  document.querySelectorAll('[data-page]').forEach(s=>s.classList.toggle('on',s.dataset.page===p));
+  document.querySelectorAll('#nav>a').forEach(a=>a.getAttribute('href')==='#'+p?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  (p==='cohort'||p==='board')?ddBtn.setAttribute('aria-current','page'):ddBtn.removeAttribute('aria-current');
+  if(p==='apply')setMode(wantM?'M':'F');wantM=false;
+  closeDd();document.body.classList.toggle('home',p==='home');window.scrollTo(0,0)};
+/* interactive field: ink strokes like iron filings, swirling around a pull that follows the pointer */
+const cv=$('sky'),cx=cv.getContext('2d');
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1,pts=[],ax=0,ay=0,tx=0,ty=0,lastMove=-1e9,t0=performance.now(),running=false;
+const size=()=>{const r=cv.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  const sp=W<640?24:30;pts=[];
+  for(let y=sp/2;y<H;y+=sp)for(let x=sp/2;x<W;x+=sp)pts.push([x+(((x*13+y*7)%5)-2),y+(((x*3+y*11)%5)-2)]);
+  if(!ax){ax=W*.68;ay=H*.42;tx=ax;ty=ay}};
+const B=7,buckets=Array.from({length:B},()=>[]);
+const frame=now=>{
+  if(!W||!H){if(!still&&document.body.classList.contains('home'))requestAnimationFrame(frame);else running=false;return}
+  const t=(now-t0)/1000;
+  if(now-lastMove>3000){tx=W*(.5+.3*Math.sin(t*.21));ty=H*(.48+.22*Math.sin(t*.33+1))}
+  ax+=(tx-ax)*.05;ay+=(ty-ay)*.05;
+  cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);
+  const sig=Math.min(W,H)*.13,s2=2*sig*sig,cxm=W/2,cym=H*.42,ex=Math.min(W*.36,420),ey=Math.min(H*.17,120);
+  for(const b of buckets)b.length=0;
+  for(const p of pts){
+    const x=p[0],y=p[1],dx=x-ax,dy=y-ay,d2=dx*dx+dy*dy,w=Math.exp(-d2/s2);
+    const base=Math.sin(x*.0028+t*.08)*.9+Math.cos(y*.0034-t*.06)*.8;
+    const sw=Math.atan2(dy,dx)+1.75;
+    const vx=Math.cos(base)*(1-w)+Math.cos(sw)*w*2.2,vy=Math.sin(base)*(1-w)+Math.sin(sw)*w*2.2;
+    const a=Math.atan2(vy,vx),L=11+w*15;
+    let k=.13+w*.87;
+    const qx=(x-cxm)/ex,qy=(y-cym)/ey,q=qx*qx+qy*qy;if(y<84&&w<.3)k=Math.min(k,.08);if(y>H-64&&w<.3)k=Math.min(k,.08);if(y>H-52&&(x<170||x>W-170||Math.abs(x-W/2)<110))continue;
+    const bi=Math.min(B-1,Math.floor(k*B));
+    buckets[bi].push(x-Math.cos(a)*L/2,y-Math.sin(a)*L/2,x+Math.cos(a)*L/2,y+Math.sin(a)*L/2);
+  }
+  cx.lineCap='round';
+  for(let i=0;i<B;i++){const b=buckets[i];if(!b.length)continue;
+    cx.strokeStyle=`rgba(150,150,148,${(.16+.42*(i+.5)/B).toFixed(3)})`;cx.lineWidth=1.2+i*.12;cx.beginPath();
+    for(let j=0;j<b.length;j+=4){cx.moveTo(b[j],b[j+1]);cx.lineTo(b[j+2],b[j+3])}cx.stroke()}
+  if(!still&&document.body.classList.contains('home'))requestAnimationFrame(frame);else running=false;
+};
+const start=()=>{if(running||!document.body.classList.contains('home'))return;running=true;requestAnimationFrame(frame)};
+const ro=new ResizeObserver(()=>{size();if(still)frame(performance.now());});ro.observe(cv);
+const move=(x,y)=>{lastMove=performance.now();tx=x;ty=y};
+cv.parentElement.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();move(e.clientX-r.left,e.clientY-r.top)});
+setTimeout(()=>$('hint').classList.add('show'),2600);setTimeout(()=>$('hint').classList.remove('show'),8000);
+addEventListener('hashchange',route);
+addEventListener('hashchange',start);
+route();
+start();
+}
+</script>
+</body>
+</html>
