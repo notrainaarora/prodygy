@@ -165,6 +165,13 @@ footer a:hover{color:var(--ink)}
 .list .open .n{color:var(--mute)}
 .list .t a{border-bottom:1px solid #3a3a3a;padding-bottom:1px}
 .list .t a:hover{color:var(--ink);border-color:var(--ink)}
+.list li.co{cursor:pointer}
+.list li.co:focus-visible{outline:1px solid var(--soft);outline-offset:4px}
+.list .tog{display:inline-block;width:1em;margin-left:10px;color:var(--mute);text-align:center}
+.list .more{grid-column:1/-1;display:none;max-width:760px;color:var(--soft);font-size:16px;line-height:1.7;padding-top:6px;cursor:auto}
+.list li.co[aria-expanded=true] .more{display:block}
+.list .more p{margin:0 0 14px}
+.list .more a{border-bottom:1px solid #3a3a3a;padding-bottom:1px;color:var(--ink)}
 @media(max-width:640px){.list li{grid-template-columns:minmax(0,1fr) auto;gap:6px 16px}.list .d{grid-column:1/-1;grid-row:2}}
 
 [data-page]{display:none}
@@ -295,9 +302,10 @@ footer a:hover{color:var(--ink)}
 {
 /* ---- Edit content here ---- */
 let companies=[
-  {n:'Jude',c:'AI',l:'AI sales-call coach that helps reps get better with every call.',s:'Building',u:'https://withjude.com',g:'radial-gradient(120% 90% at 78% 20%,#2c3a52 0%,#121722 45%,#07090c 100%)'},
-  {n:'Stunt',c:'Consumer',l:'The all-in-one app built for cheer teams.',s:'Launching 2026',u:'https://stunt.fit'},
-  {n:'Rug Pull Radar',c:'Fintech',l:'AI tool that flags likely crypto scams before people buy in.',s:'Hackathon winner',u:'https://rugrat.xyz'}
+  {n:'Jude',c:'AI',l:'AI sales-call coach that helps reps get better with every call.',s:'Building'},
+  {n:'Unspun',c:'Media',l:'AI tool that strips the spin out of news articles, keeping the facts.',s:'Live',u:'https://readunspun.vercel.app'},
+  {n:'Rug Pull Radar',c:'Fintech',l:'AI tool that flags likely crypto scams before people buy in.',s:'Hackathon winner',u:'https://rugrat.xyz'},
+  {n:'Stunt',c:'Consumer',l:'The all-in-one app built for cheer teams.',s:'Early access',u:'https://stunt.fit'}
 ];
 const people=[
   {n:'Raina Arora',r:'Founder & CEO',bio:['Raina founded Prodygy in September 2026 to give high school builders a place to take their ideas further, with people who have done it before.','She is a high school sophomore in the Bay Area, building Jude, an AI sales-call coach, and Stunt, an app for cheer teams. Her AI tool Rug Pull Radar won a scholarship at the Veritas AI hackathon. Since 2022 she has run Touched by MS, a nonprofit she co-founded with her siblings.']}
@@ -319,12 +327,16 @@ const row=c=>{const inner=`<span class="n">${esc(c.n)}</span><span class="d">${e
 
 let cat='All';
 let cats=['All',...new Set(companies.map(c=>c.c).filter(Boolean))];
-const tile=c=>`<li><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${[c.c?esc(c.c):'',c.u?`<a href="${esc(c.u)}">Visit ↗</a>`:esc(c.s)].filter(Boolean).join(' · ')}</span></li>`;
+const tile=c=>c.x?`<li class="co" tabindex="0" role="button" aria-expanded="false"><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${[c.c?esc(c.c):'',esc(c.s)].filter(Boolean).join(' · ')}<span class="tog" aria-hidden="true">+</span></span><div class="more">${c.x.split(/\n\s*\n/).map(p=>`<p>${esc(p)}</p>`).join('')}${c.u?`<p><a href="${esc(c.u)}" target="_blank" rel="noopener">Visit ${esc(c.n)} ↗</a></p>`:''}</div></li>`
+  :`<li><span class="n">${esc(c.n)}</span><span class="d">${esc(c.l)}</span><span class="t">${[c.c?esc(c.c):'',c.u?`<a href="${esc(c.u)}">Visit ↗</a>`:esc(c.s)].filter(Boolean).join(' · ')}</span></li>`;
 const drawDir=()=>{
   $('filters').innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
   $('dir').innerHTML=companies.filter(c=>cat==='All'||c.c===cat).map(tile).join('');
 };
 $('filters').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cat=b.dataset.c;drawDir()}});
+const togCo=li=>{const o=li.getAttribute('aria-expanded')!=='true';li.setAttribute('aria-expanded',o);li.querySelector('.tog').textContent=o?'–':'+'};
+$('dir').addEventListener('click',e=>{if(e.target.closest('a')||e.target.closest('.more'))return;const li=e.target.closest('li.co');if(li)togCo(li)});
+$('dir').addEventListener('keydown',e=>{const li=e.target.closest('li.co');if(li&&e.target===li&&(e.key==='Enter'||e.key===' ')){e.preventDefault();togCo(li)}});
 drawDir();
 
 $('people').innerHTML=people.map(p=>`<div class="person"><p class="who">${esc(p.n)}<span>${esc(p.r)}</span></p><div class="bio">${p.bio.map(b=>`<p>${esc(b)}</p>`).join('')}</div></div>`).join('');
@@ -335,7 +347,7 @@ drawTeams();
 const DB='https://bipwnsjtbwbfvxtoltfx.supabase.co/rest/v1',DBK='sb_publishable_pn1Pt6vlZoR2ogsQyZ72gQ_EObjaY2u';
 const getDB=t=>fetch(DB+'/'+t,{headers:{apikey:DBK,Authorization:'Bearer '+DBK}}).then(r=>{if(!r.ok)throw 0;return r.json()});
 Promise.all([getDB('companies?select=*&visible=eq.true&order=sort.asc,created_at.asc'),getDB('people?select=*&visible=eq.true&order=sort.asc,created_at.asc')]).then(([cs,ps])=>{
-  companies=cs.map(c=>({n:c.name,c:c.category,l:c.description,s:c.status,u:c.url||''}));
+  companies=cs.map(c=>({n:c.name,c:c.category,l:c.description,s:c.status,u:c.url||'',x:c.details||''}));
   const mp=p=>({n:p.name,d:p.description,t:p.label,o:p.is_open,u:p.url||''});
   cohort=ps.filter(p=>p.team==='cohort').map(mp);board=ps.filter(p=>p.team==='board').map(mp);
   cats=['All',...new Set(companies.map(c=>c.c).filter(Boolean))];if(!cats.includes(cat))cat='All';
