@@ -197,8 +197,17 @@ footer a:hover{color:var(--ink)}
     <p class="intro">Most high schoolers with a business idea have nowhere to take it. Class projects end with the semester, competitions end at the pitch, and the people who have built companies are hard to reach at 16. Prodygy exists to change that.</p>
     <div class="three" style="margin-top:clamp(56px,7vw,96px)">
       <div><h3>Built by students</h3><p>An app, a service, a tool or a business, treated as a company with real users.</p></div>
-      <div><h3>Built with mentors</h3><p>Each founder works one-on-one with a professional from our board, a few hours a week.</p></div>
+      <div><h3>Built with mentors</h3><p>Each founder is paired with a mentor from our board and meets with them a couple of times a month.</p></div>
       <div><h3>Built together</h3><p>A community of high schoolers trading feedback and pushing each other to finish.</p></div>
+    </div>
+    <div class="block">
+      <p class="k">How it works</p>
+      <ul class="list">
+        <li><span class="n">Weekly updates</span><span class="d">Every founder posts a short update each week: what they shipped, what they learned, what is next. The whole cohort sees them.</span><span class="t">Required</span></li>
+        <li><span class="n">Speaker sessions</span><span class="d">A weekly session with a founder, operator or investor who has built something real.</span><span class="t">Weekly</span></li>
+        <li><span class="n">Mentor check-ins</span><span class="d">One-on-one time with a mentor from our board, plus group office hours.</span><span class="t">Twice a month</span></li>
+        <li><span class="n">Demo Day</span><span class="d">Founders pitch the company they have built to investors, mentors and guests at a live event with speakers.</span><span class="t">End of summer</span></li>
+      </ul>
     </div>
     <div class="block">
       <p class="k">Founder</p>
@@ -213,7 +222,7 @@ footer a:hover{color:var(--ink)}
     </div>
     <div class="block">
       <p class="k">Where we are</p>
-      <p class="lead" style="color:var(--soft)">Founded in September 2026. Our goal is to support 50 to 100 student-built projects over the next two years. No investment and no equity, just guidance.</p>
+      <p class="lead" style="color:var(--soft)">Founded in September 2026. We are choosing a founding cohort of 10 to 15 high school founders who build through the year and pitch at Demo Day, planned for the end of summer 2027. The program is free, and founders keep 100% of their companies.</p>
     </div>
   </div>
 </section>
@@ -229,7 +238,7 @@ footer a:hover{color:var(--ink)}
 <section data-page="board" class="pad">
   <div class="col page">
     <h1>Board of mentors</h1>
-    <p class="intro">Working founders, operators and investors who each give one founder a few hours a week. We are filling our founding seats now.</p>
+    <p class="intro">Working founders, operators and investors who meet with a founder a couple of times a month, host office hours or speak to the cohort. We are filling our founding seats now.</p>
     <div class="block"><ul class="list" id="boardList"></ul></div>
   </div>
 </section>
@@ -248,7 +257,7 @@ footer a:hover{color:var(--ink)}
 <section data-page="apply" class="pad">
   <div class="col page">
     <h1>Get involved.</h1>
-    <p class="intro">If you are a high schooler with something you want to build, or a founder, operator or investor willing to mentor one a few hours a week, we'd like to hear from you.</p>
+    <p class="intro">If you are a high schooler with something you want to build, or a founder, operator or investor willing to mentor one a couple of times a month, we'd like to hear from you.</p>
     <div class="block">
       <div class="tabs" role="tablist">
         <button role="tab" id="tF" aria-selected="true">Founders</button>
@@ -258,6 +267,7 @@ footer a:hover{color:var(--ink)}
         <div class="two"><label>Name<input id="fN" required autocomplete="name"></label><label>Email<input id="fE" type="email" required autocomplete="email"></label></div>
         <div class="two"><label>School<input id="fS" required></label><label>Grade<select id="fG"><option>9th</option><option>10th</option><option>11th</option><option>12th</option></select></label></div>
         <label>What are you building?<textarea id="fI" required></textarea></label>
+        <label>What is the most impressive thing you have built? (optional)<textarea id="fX"></textarea></label>
         <label>Link (optional)<input id="fL" type="url" placeholder="https://"></label>
         <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
         <button class="submit" type="submit">Apply</button>
@@ -347,11 +357,11 @@ const hook=(f,nameId,msg)=>f.addEventListener('submit',async e=>{e.preventDefaul
   if(bad){bad.classList.add('bad');bad.focus();return}
   if(f.querySelector('[name=_honey]').value)return;
   const founder=f.id==='fF',btn=f.querySelector('.submit'),label=btn.textContent;
-  const data=founder?{_subject:'New Prodygy founder application: '+val('fN'),Type:'Student founder',Name:val('fN'),Email:val('fE'),School:val('fS'),Grade:val('fG'),Building:val('fI'),Link:val('fL')}
+  const data=founder?{_subject:'New Prodygy founder application: '+val('fN'),Type:'Student founder',Name:val('fN'),Email:val('fE'),School:val('fS'),Grade:val('fG'),Building:val('fI'),Impressive:val('fX'),Link:val('fL')}
     :{_subject:'New Prodygy mentor application: '+val('mN'),Type:'Mentor',Name:val('mN'),Email:val('mE'),Role:val('mR'),LinkedIn:val('mL'),Help:val('mH')};
   data._template='table';data._replyto=founder?val('fE'):val('mE');
   btn.disabled=true;btn.textContent='Sending…';
-  const row=founder?{kind:'founder',name:val('fN'),email:val('fE').toLowerCase(),school:val('fS'),grade:val('fG'),building:val('fI'),link:val('fL')||null}
+  const row=founder?{kind:'founder',name:val('fN'),email:val('fE').toLowerCase(),school:val('fS'),grade:val('fG'),building:val('fI')+(val('fX')?'\n\nMost impressive thing built: '+val('fX'):''),link:val('fL')||null}
     :{kind:'mentor',name:val('mN'),email:val('mE').toLowerCase(),role:val('mR'),linkedin:val('mL')||null,help:val('mH')};
   try{const [saved,mailed]=await Promise.all([saveApp(row).catch(()=>false),fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)}).then(r=>r.ok).catch(()=>false)]);
     if(!saved&&!mailed)throw 0;
