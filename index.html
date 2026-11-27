@@ -107,6 +107,7 @@ a.tile:hover .go{background:rgba(255,255,255,.14)}
 .tabs button{background:none;border:0;padding:8px 0;font:inherit;font-size:15px;color:var(--mute);cursor:pointer;border-bottom:1px solid transparent}
 .tabs button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
 form{display:grid;gap:30px;max-width:640px}
+[hidden]{display:none!important}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px}
 @media(max-width:560px){.two{grid-template-columns:minmax(0,1fr)}}
 label{display:grid;gap:4px;font-size:13px;color:var(--mute)}
@@ -256,13 +257,9 @@ footer a:hover{color:var(--ink)}
 
 <section data-page="apply" class="pad">
   <div class="col page">
-    <h1>Get involved.</h1>
-    <p class="intro">If you are a high schooler with something you want to build, or a founder, operator or investor willing to mentor one a couple of times a month, we'd like to hear from you.</p>
+    <h1>Apply to Prodygy.</h1>
+    <p class="intro">If you are a high schooler building something, or ready to start, we'd like to hear from you. Applications close February 1.</p>
     <div class="block">
-      <div class="tabs" role="tablist">
-        <button role="tab" id="tF" aria-selected="true">Founders</button>
-        <button role="tab" id="tM" aria-selected="false">Mentors</button>
-      </div>
       <form id="fF" novalidate>
         <div class="two"><label>Name<input id="fN" required autocomplete="name"></label><label>Email<input id="fE" type="email" required autocomplete="email"></label></div>
         <div class="two"><label>School<input id="fS" required></label><label>Grade<select id="fG"><option>9th</option><option>10th</option><option>11th</option><option>12th</option></select></label></div>
@@ -272,13 +269,7 @@ footer a:hover{color:var(--ink)}
         <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
         <button class="submit" type="submit">Apply</button>
       </form>
-      <form id="fM" novalidate hidden>
-        <div class="two"><label>Name<input id="mN" required autocomplete="name"></label><label>Email<input id="mE" type="email" required autocomplete="email"></label></div>
-        <div class="two"><label>Role and company<input id="mR" required></label><label>LinkedIn<input id="mL" type="url" placeholder="https://"></label></div>
-        <label>How could you help a founder?<textarea id="mH"></textarea></label>
-        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
-        <button class="submit" type="submit">Join the board</button>
-      </form>
+      <p class="note" style="margin-top:40px;color:var(--soft);font-size:15px">Founders, operators and investors who would like to support our founders can reach Raina at <a href="mailto:prodygy.studio@gmail.com">prodygy.studio@gmail.com</a>.</p>
       <div class="done" id="done" role="status"><h2 style="font-weight:400;font-size:26px" id="doneT"></h2><p id="doneP"></p></div>
     </div>
   </div>
@@ -330,7 +321,7 @@ $('filters').addEventListener('click',e=>{const b=e.target.closest('button');if(
 drawDir();
 
 $('people').innerHTML=people.map(p=>`<div class="person"><p class="who">${esc(p.n)}<span>${esc(p.r)}</span></p><div class="bio">${p.bio.map(b=>`<p>${esc(b)}</p>`).join('')}</div></div>`).join('');
-const li=(x,m)=>`<li class="${x.o?'open':''}"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="t">${x.o?`<a href="#apply"${m?' data-m':''}>${esc(x.t)}</a>`:x.u?`<a href="${esc(x.u)}">${esc(x.t||'Visit')} ↗</a>`:esc(x.t)}</span></li>`;
+const li=(x,m)=>`<li class="${x.o?'open':''}"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="t">${x.o&&!m?`<a href="#apply">${esc(x.t)}</a>`:x.o?esc(x.t):x.u?`<a href="${esc(x.u)}">${esc(x.t||'Visit')} ↗</a>`:esc(x.t)}</span></li>`;
 const drawTeams=()=>{$('cohortList').innerHTML=cohort.map(x=>li(x,0)).join('');$('boardList').innerHTML=board.map(x=>li(x,1)).join('')};
 drawTeams();
 /* live content from the Prodygy database; the lists above are the fallback */
@@ -345,9 +336,7 @@ Promise.all([getDB('companies?select=*&visible=eq.true&order=sort.asc,created_at
 }).catch(()=>{});
 
 let mode='F';
-const setMode=m=>{mode=m;$('tF').setAttribute('aria-selected',m==='F');$('tM').setAttribute('aria-selected',m==='M');$('fF').hidden=m!=='F';$('fM').hidden=m!=='M';$('done').classList.remove('show')};
-$('tF').addEventListener('click',()=>setMode('F'));
-$('tM').addEventListener('click',()=>setMode('M'));
+const setMode=m=>{mode='F';$('fF').hidden=false;$('done').classList.remove('show')};
 const ENDPOINT='https://formsubmit.co/ajax/prodygy.studio@gmail.com';
 /* every application is saved to the Prodygy database and also emailed to the inbox */
 const saveApp=row=>fetch(DB+'/applications',{method:'POST',headers:{apikey:DBK,Authorization:'Bearer '+DBK,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(row)}).then(r=>r.ok);
@@ -370,7 +359,6 @@ const hook=(f,nameId,msg)=>f.addEventListener('submit',async e=>{e.preventDefaul
   catch(_){btn.textContent='Something went wrong. Try again';setTimeout(()=>btn.textContent=label,4000)}
   finally{btn.disabled=false;if(btn.textContent==='Sending…')btn.textContent=label}});
 hook($('fF'),'fN','We read every application and will be in touch by email.');
-hook($('fM'),'mN','We will reach out by email to set up a short conversation.');
 document.addEventListener('input',e=>e.target.classList?.remove('bad'));
 
 const pages=['home','about','cohort','board','companies','apply'];
