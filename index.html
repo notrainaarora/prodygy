@@ -296,12 +296,8 @@ let cohort=[
   {n:'Your name',d:'Applications are open for our founding cohort.',t:'Apply',o:1}
 ];
 let board=[
-  {n:'Product & engineering',d:'Has shipped software from first version to real users.'},
-  {n:'Go-to-market & sales',d:'Has sold a product, built a pipeline or run a launch.'},
-  {n:'Design & brand',d:'Helps founders make something people want to use.'},
-  {n:'Venture & finance',d:'Knows how companies are funded and built.'},
-  {n:'Operations',d:'Has turned a scrappy project into something that runs.'}
-].map(b=>({...b,t:'Seat open',o:1}));
+  {n:'Founding mentors',d:'Founders, operators and investors who have built and backed companies. We will introduce them here as they join.',t:'By invitation',o:1}
+];
 /* --------------------------- */
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
